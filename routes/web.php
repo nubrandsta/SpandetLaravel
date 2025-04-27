@@ -25,15 +25,31 @@ Route::middleware('auth')->group(function() {
                 ->orWhere('group', 'like', "%{$search}%")
                 ->orWhere('spandukCount', 'like', "%{$search}%")
                 ->orWhere('thoroughfare', 'like', "%{$search}%")
-                ->orWhere('sublocality', 'like', "%{$search}%")
+                ->orWhere('subLocality', 'like', "%{$search}%")
                 ->orWhere('locality', 'like', "%{$search}%")
-                ->orWhere('subadmin', 'like', "%{$search}%")
+                ->orWhere('subAdmin', 'like', "%{$search}%")
                 ->orWhere('adminArea', 'like', "%{$search}%")
-                ->orWhere('postalcode', 'like', "%{$search}%");
+                ->orWhere('postalCode', 'like', "%{$search}%");
         });
     }
 
-    $data = $query->paginate(50);
+    $sortColumns = ['created_at', 'uploader', 'group', 'spandukCount', 'thoroughfare', 'subLocality', 'locality', 'subAdmin', 'adminArea', 'postalCode'];
+    $sort = request('sort');
+    $direction = request('direction');
+    
+    if ($sort && in_array($sort, $sortColumns)) {
+        if ($direction === 'asc') {
+            $query->orderBy($sort);
+        } else {
+            $query->orderByDesc($sort);
+        }
+    } else {
+        // Default sorting by created_at desc
+        $query->orderByDesc('created_at');
+    }
+
+    $data = $query->paginate(50)
+        ->appends(request()->query());
     
     return view('dashboard', ['data' => $data]);
 })->name('dashboard');
