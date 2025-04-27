@@ -10,8 +10,9 @@
         </form>
     </div>
 </nav>
-<h1>Welcome, {{ Auth::user()->full_name }}!</h1>
-    <p>Welcome to your dashboard!</p>
+<div class="container mb-4">
+    <h1 class="h2 mb-3">Welcome, {{ Auth::user()->full_name }}!</h1>
+</div>
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
@@ -24,13 +25,14 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 ml-sm-auto">
-            <div class="d-flex justify-content-between my-3">
+        <div class="col-md-9 col-lg-10 ps-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
                 <h4>Data Table</h4>
                 <div class="d-flex gap-2">
                     <form method="GET" class="d-flex">
-                        <input type="text" name="search" class="form-control" placeholder="Search..." 
-                               value="{{ request('search') }}">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                        </div>
                         <button type="submit" class="btn btn-primary ms-2">Search</button>
                     </form>
                     <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
@@ -39,7 +41,8 @@
                 </div>
             </div>
 
-            <table class="table table-striped table-hover">
+            <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Uploader</th>
@@ -69,6 +72,7 @@
                     @endforeach
                 </tbody>
             </table>
+</div>
 
             <div class="d-flex justify-content-end">
                 {{ $data->links() }}

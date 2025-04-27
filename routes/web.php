@@ -20,8 +20,17 @@ Route::middleware('auth')->group(function() {
     $query = \App\Models\Data::query();
 
     if ($search = request('search')) {
-        $query->where('locality', 'like', "%{$search}%")
-            ->orWhere('subLocality', 'like', "%{$search}%");
+        $query->where(function($q) use ($search) {
+            $q->where('uploader', 'like', "%{$search}%")
+                ->orWhere('group', 'like', "%{$search}%")
+                ->orWhere('spandukCount', 'like', "%{$search}%")
+                ->orWhere('thoroughfare', 'like', "%{$search}%")
+                ->orWhere('sublocality', 'like', "%{$search}%")
+                ->orWhere('locality', 'like', "%{$search}%")
+                ->orWhere('subadmin', 'like', "%{$search}%")
+                ->orWhere('adminArea', 'like', "%{$search}%")
+                ->orWhere('postalcode', 'like', "%{$search}%");
+        });
     }
 
     $data = $query->paginate(50);
