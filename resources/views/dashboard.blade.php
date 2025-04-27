@@ -28,23 +28,58 @@
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 ps-md-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
-                <h4>Tabel Data</h4>
-                <div class="d-flex gap-2">
-                    <form method="GET" class="d-flex">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
-                        </div>
-                        <button type="submit" class="btn btn-primary ms-2">Cari</button>
-                    </form>
-                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
-                        <i class="bi-arrow-clockwise"></i> Refresh
-                    </a>
-                </div>
-            </div>
 
-            <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
+
+            <div id="detailContainer" class="row mb-4" style="display: none;">
+    <div class="col-md-8">
+        <div class="bg-white p-3 rounded shadow-sm">
+            <div class="row small g-2">
+                <div class="col-6"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                <div class="col-6"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                <div class="col-6"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
+                <div class="col-6"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
+                <div class="col-6"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
+                <div class="col-6"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
+                <div class="col-6"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
+                <div class="col-6"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
+                <div class="col-6"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
+                <div class="col-6"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
+            
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
+            <img id="detail-image" src="" class="img-fluid" style="display: none;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" />
+            <div id="image-placeholder" class="text-muted w-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                </svg>
+                <div class="small mt-2">No image available</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+    <h4>Tabel Data</h4>
+    <div class="d-flex gap-2">
+        <form method="GET" class="d-flex">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
+            </div>
+            <button type="submit" class="btn btn-primary ms-2">Cari</button>
+        </form>
+        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi-arrow-clockwise"></i> Refresh
+        </a>
+    </div>
+</div>
+
+<div id="dataTableContainer">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
                 <thead>
                     <tr>
                         @php
@@ -151,7 +186,7 @@
                 <tbody>
                     @foreach($data as $item)
                     <tr>
-                        <td>{{ $item->created_at->format('d M Y H:i:s') }}</td>
+                        <td data-id="{{ $item->id }}">{{ $item->created_at->format('d M Y H:i:s') }}</td>
 <td>{{ $item->uploader }}</td>
                         <td>{{ $item->group }}</td>
                         <td>{{ $item->spandukCount }}</td>
@@ -173,4 +208,72 @@
         </div>
     </div>
 </div>
+
+<style>
+    #detailContainer [id^="detail-"] {
+        font-size: 0.875rem;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+    #detailContainer .row {
+        align-items: stretch;
+    }
+    #detail-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        flex-shrink: 1;
+    }
+    #image-placeholder {
+        min-height: 200px;
+    }
+    
+    #detailContainer .col-md-4 > div {
+        width: 300px;
+        height: 300px;
+        min-width: 300px;
+        min-height: 300px;
+    }
+    tr {
+        cursor: pointer;
+    }
+    tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+@section('scripts')
+<script>
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', async () => {
+            const id = row.querySelector('td:first-child').dataset.id;
+            try {
+                const response = await fetch(`/api/data/${id}`);
+                const data = await response.json();
+                
+                // Update detail panel
+                document.getElementById('detailContainer').style.display = 'flex';
+                document.querySelectorAll('[id^="detail-"]').forEach(el => {
+                    const field = el.id.replace('detail-', '');
+                    el.textContent = data[field] || '-';
+                });
+                
+                // Update image
+                const img = document.getElementById('detail-image');
+                const placeholder = document.getElementById('image-placeholder');
+                if (data.image_url) {
+                    img.src = data.image_url;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                } else {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    });
+</script>
+@endsection
 @endsection

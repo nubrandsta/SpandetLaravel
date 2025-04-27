@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\DataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,5 @@ Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->
     Route::post('/validate-token', [AuthController::class, 'validateToken']);
     Route::post('/upload', [AuthController::class, 'uploadData']);
 });
+
+Route::get('/data/{id}', [DataController::class, 'show']);
