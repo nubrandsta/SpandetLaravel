@@ -16,7 +16,18 @@ Route::middleware('guest')->group(function() {
 
 
 Route::middleware('auth')->group(function() {
-    Route::get('/dashboard', function() { return view('dashboard'); });
+    Route::get('/dashboard', function() {
+    $query = \App\Models\Data::query();
+
+    if ($search = request('search')) {
+        $query->where('locality', 'like', "%{$search}%")
+            ->orWhere('subLocality', 'like', "%{$search}%");
+    }
+
+    $data = $query->paginate(50);
+    
+    return view('dashboard', ['data' => $data]);
+})->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 

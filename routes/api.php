@@ -18,4 +18,5 @@ use App\Http\Controllers\Api\AuthController;
 Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/validate-token', [AuthController::class, 'validateToken']);
+    Route::post('/upload', [AuthController::class, 'uploadData']);
 });

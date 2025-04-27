@@ -6,26 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    
-    /**
-     * Handle API login request
-     * 
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request)
     {
         try {
-            // Validate request
             $credentials = $request->validate([
                 'username' => 'required',
                 'password' => 'required'
@@ -34,7 +22,6 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
 
-                // Validate user group
                 if (!$user->group || !in_array($user->group, ['admin', 'auditors'])) {
                     return response()->json([
                         'status' => 'error',
@@ -42,13 +29,22 @@ class AuthController extends Controller
                     ], 401);
                 }
 
-                // Generate a session token
                 $token = Str::random(60);
                 
-                // Store token in session with user info
-                $request->session()->put('api_token', $token);
-                $request->session()->put('user_id', $user->id);
-                
+                // Store in sessions table
+                DB::table('sessions')->insert([
+                    'id' => Str::uuid(),
+                    'user_id' => $user->id,
+                    'payload' => $token,
+                    'last_activity' => now()->getTimestamp()
+                ]);
+
+                // Cleanup expired sessions
+                $expiration = 7200;
+                DB::table('sessions')
+                    ->where('last_activity', '<', now()->getTimestamp() - $expiration)
+                    ->delete();
+
                 return response()->json([
                     'status' => 'success',
                     'username' => $user->username,
@@ -67,45 +63,126 @@ class AuthController extends Controller
             ], 500);
         }
     }
-    
-    /**
-     * Validate token and return user information
-     * 
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function validateToken(Request $request)
     {
         try {
-            // Validate request
             $validated = $request->validate([
                 'session' => 'required'
             ]);
             
             $token = $validated['session'];
-            $sessionToken = $request->session()->get('api_token');
-            
-            // Check if token exists and matches
-            if ($sessionToken && $token === $sessionToken) {
-                $userId = $request->session()->get('user_id');
-                $user = Auth::loginUsingId($userId);
-                
-                if ($user) {
-                    return response()->json([
-                        'status' => 'success',
-                        'username' => $user->username
-                    ]);
-                }
+            $session = DB::table('sessions')
+                        ->where('payload', $token)
+                        ->first();
+
+            if (!$session) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid token'
+                ], 401);
             }
+
+            $expiration = 7200; // 2 hours
+            if ((now()->getTimestamp() - $session->last_activity) > $expiration) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Token expired'
+                ], 401);
+            }
+
+            $user = Auth::loginUsingId($session->user_id);
             
             return response()->json([
-                'status' => 'error',
-                'message' => 'Token expired or invalid'
-            ], 401);
+                'status' => 'success',
+                'username' => $user->username
+            ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Internal server error: ' . $e->getMessage()
+            ], 500);
+        }
+        }
+
+    public function uploadData(Request $request)
+    {
+        try {
+            // Validate session token
+            $validated = $request->validate([
+                'session' => 'required'
+            ]);
+            
+            $token = $validated['session'];
+            $session = DB::table('sessions')
+                        ->where('payload', $token)
+                        ->first();
+
+            if (!$session) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid token'
+                ], 401);
+            }
+
+            // Check token expiration
+            $expiration = 7200;
+            if ((now()->getTimestamp() - $session->last_activity) > $expiration) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Token expired'
+                ], 401);
+            }
+
+            // Get authenticated user
+            $user = Auth::loginUsingId($session->user_id);
+
+            // Validate request data
+            $validatedData = $request->validate([
+                'lat' => 'required|numeric',
+                'long' => 'required|numeric',
+                'thoroughfare' => 'required|string',
+                'subloc' => 'required|string',
+                'locality' => 'required|string',
+                'subadmin' => 'required|string',
+                'adminArea' => 'required|string',
+                'postalcode' => 'required|string',
+                'image' => 'required|image|max:2048'
+            ]);
+
+            // Store image
+            $imagePath = $request->file('image')->store('images', 'public');
+            // Use relative path instead of full URL with domain
+            $imageUrl = '/storage/' . $imagePath;
+
+            // Create data record
+            DB::table('data')->insert([
+                'id' => Str::uuid(),
+                'uploader' => $user->username,
+                'group' => $user->group,
+                'lat' => $validatedData['lat'],
+                'long' => $validatedData['long'],
+                'thoroughfare' => $validatedData['thoroughfare'],
+                'sublocality' => $validatedData['subloc'],
+                'locality' => $validatedData['locality'],
+                'subadmin' => $validatedData['subadmin'],
+                'adminArea' => $validatedData['adminArea'],
+                'postalcode' => $validatedData['postalcode'],
+                'imgURI' => $imageUrl,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data successfully uploaded'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Upload failed: ' . $e->getMessage()
             ], 500);
         }
     }
