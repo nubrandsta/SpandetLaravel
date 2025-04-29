@@ -20,7 +20,7 @@
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 bg-light sidebar">
             <div class="list-group mt-3">
-                <a href="#" class="list-group-item list-group-item-action">Manajemen Akun</a>
+                <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action">Manajemen Akun</a>
                 <a href="#" class="list-group-item list-group-item-action">Manajemen Kelompok</a>
                 <a href="#" class="list-group-item list-group-item-action">Manajemen Data</a>
             </div>
@@ -246,20 +246,25 @@
 <script>
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('click', async () => {
-            const id = row.querySelector('td:first-child').dataset.id;
+            const userId = row.dataset.userId;
             try {
-                const response = await fetch(`/api/data/${id}`);
-                const data = await response.json();
+                const response = await fetch(`/api/users/${userId}`);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+                const user = await response.json();
+                const detailPanel = document.getElementById('userDetails');
+                detailPanel.style.display = 'flex';
                 
-                // Update detail panel
-                document.getElementById('detailContainer').style.display = 'flex';
-                document.querySelectorAll('[id^="detail-"]').forEach(el => {
-                    const field = el.id.replace('detail-', '');
-                    el.textContent = data[field] || '-';
-                });
-                
-                // Update image
-                const img = document.getElementById('detail-image');
+                document.getElementById('detailId').textContent = user.id || '-';
+                document.getElementById('detailUsername').textContent = user.username || '-';
+                document.getElementById('detailName').textContent = user.full_name || '-';
+                document.getElementById('detailGroup').textContent = user.group || '-';
+            } catch (error) {
+                alert(`Error fetching user details: ${error.message}`);
+                console.error('Error:', error);
+            }
+        });
                 const placeholder = document.getElementById('image-placeholder');
                 if (data.image_url) {
                     img.src = data.image_url;

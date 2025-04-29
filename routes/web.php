@@ -54,6 +54,12 @@ Route::middleware('auth')->group(function() {
     return view('dashboard', ['data' => $data]);
 })->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/user-management', [\App\Http\Controllers\UserController::class, 'index'])->name('user.management');
+    Route::post('/user', [\App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+    Route::put('/user/{user}/name', [\App\Http\Controllers\UserController::class, 'updateName']);
+    Route::put('/user/{user}/group', [\App\Http\Controllers\UserController::class, 'updateGroup']);
+    Route::post('/user/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword']);
+    Route::delete('/user/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
 });
 
 

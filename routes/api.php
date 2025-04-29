@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ use App\Http\Controllers\DataController;
 // Apply session middleware explicitly to auth routes
 Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/validate-token', [AuthController::class, 'validateToken']);
     Route::post('/upload', [AuthController::class, 'uploadData']);
 });
