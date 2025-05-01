@@ -246,26 +246,38 @@
 <script>
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('click', async () => {
-            const userId = row.dataset.userId;
+            const dataId = row.querySelector('td[data-id]').dataset.id;
+            if (!dataId) return;
+            
+            // Show the detail container
+            const detailContainer = document.getElementById('detailContainer');
+            detailContainer.style.display = 'flex';
+            
             try {
-                const response = await fetch(`/api/users/${userId}`);
+                // Fetch data details
+                const response = await fetch(`/api/data/${dataId}`);
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
                 }
-                const user = await response.json();
-                const detailPanel = document.getElementById('userDetails');
-                detailPanel.style.display = 'flex';
                 
-                document.getElementById('detailId').textContent = user.id || '-';
-                document.getElementById('detailUsername').textContent = user.username || '-';
-                document.getElementById('detailName').textContent = user.full_name || '-';
-                document.getElementById('detailGroup').textContent = user.group || '-';
-            } catch (error) {
-                alert(`Error fetching user details: ${error.message}`);
-                console.error('Error:', error);
-            }
-        });
+                const data = await response.json();
+                
+                // Update detail fields
+                document.getElementById('detail-uploader').textContent = data.uploader || '-';
+                document.getElementById('detail-lat').textContent = data.lat || '-';
+                document.getElementById('detail-long').textContent = data.long || '-';
+                document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
+                document.getElementById('detail-subLocality').textContent = data.subLocality || '-';
+                document.getElementById('detail-locality').textContent = data.locality || '-';
+                document.getElementById('detail-subAdmin').textContent = data.subAdmin || '-';
+                document.getElementById('detail-adminArea').textContent = data.adminArea || '-';
+                document.getElementById('detail-postalCode').textContent = data.postalCode || '-';
+                document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
+                
+                // Handle image
+                const img = document.getElementById('detail-image');
                 const placeholder = document.getElementById('image-placeholder');
+                
                 if (data.image_url) {
                     img.src = data.image_url;
                     img.style.display = 'block';
@@ -276,6 +288,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
+                alert(`Error fetching data details: ${error.message}`);
             }
         });
     });
