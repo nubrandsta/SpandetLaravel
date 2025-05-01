@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     tr.user-row {
@@ -11,7 +12,6 @@
     }
     #userDetails .card-body {
         padding: 1.5rem;
-
     }
 
     #userDetails p {
@@ -31,13 +31,6 @@
         padding-left: 1.5rem;
         padding-right: 1.5rem;
     }
-
-    #d-flex flex-column {
-        margin-left: 40em;
-        margin-right: 40em;
-        margin-top: 2em;
-        margin-bottom: 2em;
-    }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
@@ -52,6 +45,16 @@
 </nav>
 
 <div class="container-fluid">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        @if(session('password'))
+        <br><strong>Password baru: {{ session('password') }}</strong>
+        @endif
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 bg-light sidebar">
@@ -84,107 +87,72 @@
                         </div>
                     </div>
                 </div>
-    <div class="row">
-        <div class="col-md-9">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daftar Akun</h5>
-                    <form class="form-inline" method="GET">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary ms-2">Cari
-                                    <i class="fas fa-search"></i>
-                                </button>
-                                <a href="{{ route('user.management') }}" class="btn btn-outline-secondary">
-                                    <i class="bi-arrow-clockwise"></i> Refresh
-                                </a>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Daftar Akun</h5>
+                                <form class="form-inline" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-primary ms-2">Cari
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            <a href="{{ route('user.management') }}" class="btn btn-outline-secondary">
+                                                <i class="bi-arrow-clockwise"></i> Refresh
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                @foreach(['Username' => 'username', 'Full Name' => 'full_name', 'Group' => 'group', 'Creation' => 'created_at'] as $label => $column)
+                                                    <th>{{ $label }}</th>
+                                                @endforeach
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($users as $user)
+                                                <tr class="user-row" data-user-id="{{ $user->id }}">
+                                                    <td>{{ $user->username }}</td>
+                                                    <td>{{ $user->full_name }}</td>
+                                                    <td>{{ $user->group }}</td>
+                                                    <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{ $users->links() }}
                             </div>
                         </div>
-                    </form>
-                </div>
-                
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    @php
-                                        $sortColumns = ['username', 'full_name', 'group', 'created_at'];
-                                        $sort = request('sort');
-                                        $direction = request('direction');
-                                        
-                                        $sortIcons = [
-                                            'default' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/></svg>',
-                                            'asc' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>',
-                                            'desc' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/></svg>'
-                                        ];
-                                        
-                                        $currentSort = request('sort');
-                                        $currentDirection = request('direction');
-                                        
-                                        function getNextDirection($column, $currentSort, $currentDirection) {
-                                            if ($column !== $currentSort) return 'desc';
-                                            return match($currentDirection) {
-                                                'desc' => 'asc',
-                                                'asc' => 'desc',
-                                                default => 'desc'
-                                            };
-                                        }
-                                    @endphp
-                                    @foreach(['Username' => 'username', 'Full Name' => 'full_name', 'Group' => 'group', 'Creation' => 'created_at'] as $label => $column)
-                                        <th>
-                                            <div class="d-flex align-items-center flex-nowrap">
-                                                <span>{{ $label }}</span>
-                                                <a href="{{ request()->fullUrlWithQuery(['sort' => $column, 'direction' => getNextDirection($column, $currentSort, $currentDirection)]) }}" class="text-decoration-none ms-2" style="cursor: pointer">
-                                                    {!! $sortIcons[$currentSort === $column ? ($currentDirection ?: 'default') : 'default'] !!}
-                                                </a>
-                                            </div>
-                                        </th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($users as $user)
-                                    <tr class="user-row" data-user-id="{{ $user->id }}">
-                                        <td data-user-id="{{ $user->id }}">{{ $user->username }}</td>
-                                        <td>{{ $user->full_name }}</td>
-                                        <td>{{ $user->group }}</td>
-                                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
-                    {{ $users->links() }}
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Manajemen Akun</h5>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <button class="btn btn-primary mb-3" id="createUserBtn">Tambah Pengguna</button>
+                                <button class="btn btn-info mb-3" id="editNameBtn">Ubah Nama Lengkap</button>
+                                <button class="btn btn-info mb-3" id="editGroupBtn">Ubah Grup</button>
+                                <button class="btn btn-warning mb-3" id="resetPasswordBtn">Reset Kata Sandi</button>
+                                <button class="btn btn-danger mb-3" id="deleteUserBtn">Hapus Pengguna</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Manajemen Akun</h5>
-                </div>
-                <div class="d-flex flex-column">
-                    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">
-                        <i class="fas fa-plus-circle"></i> Tambah Pengguna
-                    </button>
-                    <button class="btn btn-info mb-3" data-toggle="modal" data-target="#editNameModal">
-                        Ubah Nama Lengkap
-                    </button>
-                    <button class="btn btn-info mb-3" data-toggle="modal" data-target="#editGroupModal">
-                        Ubah Grup
-                    </button>
-                    <button class="btn btn-warning mb-3" data-toggle="modal" data-target="#resetPasswordModal">
-                        Reset Kata Sandi
-                    </button>
-                    <button class="btn btn-danger mb-3" data-toggle="modal" data-target="#deleteUserModal">
-                        Hapus Pengguna
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -193,10 +161,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createUserModalLabel">Create New User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="createUserModalLabel">Buat Pengguna Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="createUserForm" method="POST" action="{{ route('user.store') }}">
                 @csrf
@@ -207,45 +173,125 @@
                     </div>
                     <div class="form-group">
                         <label for="newFullName">Nama</label>
-                        <input type="text" class="form-control" id="newFullName" name="name" required>
+                        <input type="text" class="form-control" id="newFullName" name="full_name" required>
                     </div>
                     <div class="form-group">
                         <label for="newGroup">Kelompok</label>
                         <select class="form-control" id="newGroup" name="group" required>
-                            <option value="user">User</option>
-                            <option value="manager">Manager</option>
+                            @foreach($groups as $group)
+                                <option value="{{ $group }}">{{ $group }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Buat Pengguna</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-@include('user-management.modals')
 
-<div class="modal fade" id="successModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="editNameModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editNameForm" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="modal-header">
+          <h5 class="modal-title">Ubah Nama Lengkap</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="user_id" id="editNameUserId">
+          <div class="form-group">
+            <label>Nama Baru</label>
+            <input type="text" class="form-control" name="new_name" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editGroupModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editGroupForm" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="modal-header">
+          <h5 class="modal-title">Ubah Grup</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="user_id" id="editGroupUserId">
+          <div class="form-group">
+            <label>Grup Baru</label>
+            <select class="form-control" name="new_group" id="groupSelect" required></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="resetPasswordModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reset Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Yakin ingin reset password untuk <strong id="resetUserName"></strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmReset">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">User Created Successfully</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Pengguna Berhasil Dibuat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Username: <strong id="generatedUsername"></strong></p>
-                <p>Temporary Password: <strong id="generatedPassword"></strong></p>
+                <div class="mb-3">
+                    <label class="form-label">Username:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="generatedUsername" readonly>
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('generatedUsername')">Copy</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Temporary Password:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="generatedPassword" readonly>
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('generatedPassword')">Copy</button>
+                    </div>
+                </div>
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i> 
-                    User must change this password on first login
+                    Pengguna harus mengganti kata sandi ini pada login pertama
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-secondary" id="successModalOkBtn" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -253,51 +299,452 @@
 
 @section('scripts')
 <script>
-$(document).ready(function() {
-    $('#createUserForm').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            success: function(response) {
-                $('#createUserModal').modal('hide');
-                $('#successModal').modal('show');
-                $('#generatedUsername').text(response.username);
-                $('#generatedPassword').text(response.password);
-                $('#createUserForm')[0].reset();
-            },
-            error: function(xhr) {
-                alert(xhr.responseJSON.message || 'Error creating user');
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix for aria-hidden warning
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('shown.bs.modal', function() {
+            this.setAttribute('aria-hidden', 'false');
+        });
+        modal.addEventListener('hidden.bs.modal', function() {
+            this.setAttribute('aria-hidden', 'true');
         });
     });
+    // Initialize Bootstrap 5 modals
+    const createUserModal = new bootstrap.Modal(document.getElementById('createUserModal'));
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+
+    // Modal button triggers
+    document.getElementById('createUserBtn').addEventListener('click', () => createUserModal.show());
+
+    // Handle row click for user details
+    let selectedUserId = null;
     document.querySelectorAll('tbody tr').forEach(row => {
-        row.addEventListener('click', async () => {
-            const userId = row.dataset.userId;
-            // Existing user detail fetch logic preserved
-            try {
-                const response = await fetch(`/api/users/${userId}`);
-                const user = await response.json();
-                
-                document.getElementById('userDetails').style.display = 'flex';
-                document.getElementById('detailId').textContent = user.id;
-                document.getElementById('detailUsername').textContent = user.username;
-                document.getElementById('detailName').textContent = user.full_name;
-                document.getElementById('detailGroup').textContent = user.group;
-            } catch (error) {
-                console.error('Error fetching user details:', error);
-            }
+        row.addEventListener('click', () => {
+            selectedUserId = row.dataset.userId;
+            
+            // Get user details directly from the row data instead of making an API call
+            const username = row.cells[0].textContent;
+            const fullName = row.cells[1].textContent;
+            const group = row.cells[2].textContent;
+            
+            document.getElementById('userDetails').style.display = 'flex';
+            document.getElementById('detailId').textContent = selectedUserId;
+            document.getElementById('detailUsername').textContent = username;
+            document.getElementById('detailName').textContent = fullName;
+            document.getElementById('detailGroup').textContent = group;
         });
     });
 
-    $('#resetPasswordModal').on('show.bs.modal', function(e) {
-        const userId = $('#detailId').text();
-        if (!userId) {
-            e.preventDefault();
-            alert('Please select a user first');
+    // Username validation function
+    const validateUsername = (username) => /^[a-zA-Z0-9]+$/.test(username);
+
+    // Password generator
+    const generatePassword = () => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+        return Array.from({length: 8}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    };
+
+    // Enhanced form handling
+    document.getElementById('createUserForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Clear previous error messages
+        const errorContainer = document.getElementById('createUserErrors');
+        if (errorContainer) errorContainer.innerHTML = '';
+        
+        // Validate username format
+        const username = this.username.value.trim();
+        if (!validateUsername(username)) {
+            showFormError('Username hanya boleh mengandung huruf dan angka');
+            return;
+        }
+        
+        // Validate full name
+        const fullName = this.full_name.value.trim();
+        if (fullName.length < 3) {
+            showFormError('Nama lengkap minimal 3 karakter');
+            return;
+        }
+
+        const formData = new FormData(this);
+        try {
+            console.log('Submitting form to:', this.action);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            console.log('Response status:', response.status);
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (response.ok) {
+                // Success case
+                createUserModal.hide();
+                this.reset();
+                
+                // Show success modal with generated credentials
+                console.log('Success data:', data); // Debug log
+                
+                // Only show success modal with credentials if we have a successful response
+                if (data.success === true && data.username && data.password) {
+                    const usernameEl = document.getElementById('generatedUsername');
+                    const passwordEl = document.getElementById('generatedPassword');
+                    
+                    usernameEl.value = data.username;
+                    passwordEl.value = data.password;
+                    
+                    // Make password more visible
+                    passwordEl.style.fontWeight = 'bold';
+                    passwordEl.style.color = '#dc3545'; // Bootstrap danger color
+                    
+                    successModal.show();
+                } else {
+                    // Something went wrong even though response was OK
+                    alert('User created but credentials could not be displayed. Please check with administrator.');
+                    window.location.reload();
+                }
+                
+                // Reload page after viewing success message
+                const okBtn = document.getElementById('successModalOkBtn');
+                // Remove any existing event listeners
+                const newOkBtn = okBtn.cloneNode(true);
+                okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                
+                // Add new event listener
+                newOkBtn.addEventListener('click', () => {
+                    window.location.reload();
+                });
+            } else {
+                // Handle validation errors
+                if (data.errors) {
+                    // Display specific validation errors
+                    const errorMessages = Object.values(data.errors).flat();
+                    showFormError(errorMessages.join('<br>'));
+                } else if (data.message && data.message.includes('Duplicate entry')) {
+                    // Handle duplicate entry errors
+                    if (data.message.includes('username')) {
+                        showFormError('Username sudah digunakan. Silakan pilih username lain.');
+                    } else {
+                        showFormError('Data sudah ada dalam sistem.');
+                    }
+                } else {
+                    // Generic error
+                    showFormError(data.message || 'Gagal membuat pengguna baru');
+                }
+            }
+        } catch (error) {
+            showFormError(`Error: ${error.message}`);
         }
     });
+    
+    // Helper function to display form errors
+    function showFormError(message) {
+        let errorContainer = document.getElementById('createUserErrors');
+        if (!errorContainer) {
+            errorContainer = document.createElement('div');
+            errorContainer.id = 'createUserErrors';
+            errorContainer.className = 'alert alert-danger mt-3';
+            document.querySelector('#createUserForm .modal-body').appendChild(errorContainer);
+        }
+        errorContainer.innerHTML = message;
+    }
+
+    // Modal instances
+    const editNameModal = new bootstrap.Modal(document.getElementById('editNameModal'));
+    const editGroupModal = new bootstrap.Modal(document.getElementById('editGroupModal'));
+    const resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+
+    // Edit name handler
+    document.getElementById('editNameBtn').addEventListener('click', () => {
+        if (!selectedUserId) return alert('Pilih pengguna terlebih dahulu');
+        editNameModal.show();
+        document.getElementById('editNameUserId').value = selectedUserId;
+    });
+
+    // Edit group handler
+    document.getElementById('editGroupBtn').addEventListener('click', async () => {
+        if (!selectedUserId) return alert('Pilih pengguna terlebih dahulu');
+        
+        // Get current group from the user details panel
+        const currentGroup = document.getElementById('detailGroup').textContent;
+        console.log('Current group:', currentGroup);
+        
+        // Populate the group select dropdown with available groups
+        const groupSelect = document.getElementById('groupSelect');
+        groupSelect.innerHTML = '';
+        console.log('Cleared groupSelect dropdown');
+        
+        try {
+            // Fetch groups from the API
+            console.log('Fetching groups from /api/groups');
+            const response = await fetch('/api/groups');
+            console.log('API response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch groups');
+            }
+            
+            const responseText = await response.text();
+            console.log('Raw API response:', responseText);
+            
+            // Parse the JSON response
+            const allGroups = JSON.parse(responseText);
+            console.log('Groups fetched from database (parsed):', allGroups);
+            console.log('Number of groups returned:', Array.isArray(allGroups) ? allGroups.length : 'Not an array');
+            console.log('Type of allGroups:', typeof allGroups);
+            
+            // Add all groups except the current one
+            let optionsAdded = 0;
+            
+            if (Array.isArray(allGroups)) {
+                allGroups.forEach(group => {
+                    console.log('Processing group:', group, 'Current group:', currentGroup, 'Match?', group === currentGroup);
+                    // Skip the current group as we don't want to change to the same group
+                    if (group !== currentGroup) {
+                        const option = document.createElement('option');
+                        option.value = group;
+                        option.textContent = group;
+                        groupSelect.appendChild(option);
+                        console.log('Added group option:', group);
+                        optionsAdded++;
+                    } else {
+                        console.log('Skipping current group:', group);
+                    }
+                });
+            } else {
+                console.error('Groups data is not an array:', allGroups);
+                alert('Error: Data grup tidak valid. Silakan hubungi administrator.');
+                return;
+            }
+            
+            console.log('Total options added to groupSelect:', optionsAdded);
+            console.log('Final dropdown HTML:', groupSelect.innerHTML);
+            
+            // If no options were added, show a message
+            if (optionsAdded === 0) {
+                alert('Tidak ada grup lain yang tersedia untuk pengguna ini.');
+                return;
+            }
+            
+            document.getElementById('editGroupUserId').value = selectedUserId;
+            editGroupModal.show();
+        } catch (error) {
+            console.error('Error fetching groups:', error);
+            console.error('Error details:', error.stack);
+            alert('Gagal memuat daftar grup. Silakan coba lagi.');
+        }
+    });
+
+    // Reset password handler
+    document.getElementById('resetPasswordBtn').addEventListener('click', () => {
+        if (!selectedUserId) return alert('Pilih pengguna terlebih dahulu');
+        
+        // Get username directly from the user details panel
+        const username = document.getElementById('detailUsername').textContent;
+        document.getElementById('resetUserName').textContent = username;
+        resetPasswordModal.show();
+    });
+
+    // Reset password confirmation
+    document.getElementById('confirmReset').addEventListener('click', () => {
+        // Create a standard form for submission
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/user/${selectedUserId}/reset-password`;
+        form.style.display = 'none';
+        
+        // Add CSRF token
+        const csrfField = document.createElement('input');
+        csrfField.type = 'hidden';
+        csrfField.name = '_token';
+        csrfField.value = document.querySelector('meta[name="csrf-token"]').content;
+        form.appendChild(csrfField);
+        
+        // Add the form to the document and submit it
+        document.body.appendChild(form);
+        
+        console.log('Resetting password for user:', selectedUserId);
+        form.submit();
+        // The page will reload after form submission
+    });
+
+    // Delete user handler
+    document.getElementById('deleteUserBtn').addEventListener('click', () => {
+        if (!selectedUserId) return alert('Pilih pengguna terlebih dahulu');
+        if (confirm('Apakah anda yakin ingin menghapus pengguna ini?')) {
+            console.log('Deleting user:', selectedUserId);
+            
+            // Create a standard form for submission
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/user/${selectedUserId}`;
+            form.style.display = 'none';
+            
+            // Add CSRF token
+            const csrfField = document.createElement('input');
+            csrfField.type = 'hidden';
+            csrfField.name = '_token';
+            csrfField.value = document.querySelector('meta[name="csrf-token"]').content;
+            form.appendChild(csrfField);
+            
+            // Add method spoofing
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'DELETE';
+            form.appendChild(methodField);
+            
+            // Add the form to the document and submit it
+            document.body.appendChild(form);
+            form.submit();
+            // The page will reload after form submission
+        }
+    });
+
+    // Form submission handlers
+    document.getElementById('editNameForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const userId = formData.get('user_id');
+        const newName = formData.get('new_name');
+        
+        // Create a standard form for submission
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/user/${userId}/name`;
+        form.style.display = 'none';
+        
+        // Add CSRF token
+        const csrfField = document.createElement('input');
+        csrfField.type = 'hidden';
+        csrfField.name = '_token';
+        csrfField.value = document.querySelector('meta[name="csrf-token"]').content;
+        form.appendChild(csrfField);
+        
+        // Add method spoofing
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'PUT';
+        form.appendChild(methodField);
+        
+        // Add the new name field
+        const nameField = document.createElement('input');
+        nameField.type = 'hidden';
+        nameField.name = 'new_name';
+        nameField.value = newName;
+        form.appendChild(nameField);
+        
+        // Add the form to the document and submit it
+        document.body.appendChild(form);
+        
+        console.log('Updating name for user:', userId);
+        form.submit();
+        // The page will reload after form submission
+    });
+
+    document.getElementById('editGroupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const userId = formData.get('user_id');
+        const newGroup = formData.get('new_group');
+        
+        // Create a standard form for submission
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/user/${userId}/group`;
+        form.style.display = 'none';
+        
+        // Add CSRF token
+        const csrfField = document.createElement('input');
+        csrfField.type = 'hidden';
+        csrfField.name = '_token';
+        csrfField.value = document.querySelector('meta[name="csrf-token"]').content;
+        form.appendChild(csrfField);
+        
+        // Add method spoofing
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'PUT';
+        form.appendChild(methodField);
+        
+        // Add the new group field
+        const groupField = document.createElement('input');
+        groupField.type = 'hidden';
+        groupField.name = 'new_group';
+        groupField.value = newGroup;
+        form.appendChild(groupField);
+        
+        // Add the form to the document and submit it
+        document.body.appendChild(form);
+        
+        console.log('Updating group for user:', userId);
+        form.submit();
+        // The page will reload after form submission
+    });
+
+    // Form submission handling
+    document.getElementById('createUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            createUserModal.hide();
+            
+            // Only set credentials if we have a successful response with username and password
+            if (data.success === true && data.username && data.password) {
+                console.log('Setting credentials with:', data);
+                console.log('Username:', data.username);
+                console.log('Password:', data.password);
+                
+                document.getElementById('generatedUsername').value = data.username;
+                document.getElementById('generatedPassword').value = data.password;
+                
+                // Make password more visible
+                const passwordEl = document.getElementById('generatedPassword');
+                passwordEl.style.fontWeight = 'bold';
+                passwordEl.style.color = '#dc3545'; // Bootstrap danger color
+                
+                successModal.show();
+            } else {
+                console.error('Invalid response data:', data);
+                alert('Error: Could not retrieve user credentials');
+                return;
+            }
+            this.reset();
+        })
+        .catch(error => {
+            alert('Error creating user: ' + error.message);
+        });
+    });
+    
+    // Copy to clipboard function
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        element.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const originalText = element.nextElementSibling.textContent;
+        element.nextElementSibling.textContent = 'Copied!';
+        setTimeout(() => {
+            element.nextElementSibling.textContent = originalText;
+        }, 1500);
+    }
 });
 </script>
 @endsection

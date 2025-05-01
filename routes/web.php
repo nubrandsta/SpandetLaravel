@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function() {
     Route::put('/user/{user}/group', [\App\Http\Controllers\UserController::class, 'updateGroup']);
     Route::post('/user/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword']);
     Route::delete('/user/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
+    
+    // API routes for user management
+    Route::get('/api/groups', [\App\Http\Controllers\UserController::class, 'getGroups']);
 });
 
 
