@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function() {
     return view('dashboard', ['data' => $data]);
 })->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    // User management routes
     Route::get('/user-management', [\App\Http\Controllers\UserController::class, 'index'])->name('user.management');
     Route::post('/user', [\App\Http\Controllers\UserController::class, 'store'])->name('user.store');
     Route::put('/user/{user}/name', [\App\Http\Controllers\UserController::class, 'updateName']);
@@ -61,8 +62,15 @@ Route::middleware('auth')->group(function() {
     Route::post('/user/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword']);
     Route::delete('/user/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
     
-    // API routes for user management
+    // Group management routes
+    Route::get('/group-management', [\App\Http\Controllers\GroupController::class, 'index'])->name('group.management');
+    Route::post('/group', [\App\Http\Controllers\GroupController::class, 'store'])->name('group.store');
+    Route::put('/group/{group}/description', [\App\Http\Controllers\GroupController::class, 'updateDescription']);
+    Route::delete('/group/{group}', [\App\Http\Controllers\GroupController::class, 'destroy']);
+    
+    // API routes
     Route::get('/api/groups', [\App\Http\Controllers\UserController::class, 'getGroups']);
+    Route::get('/api/groups/{groupName}', [\App\Http\Controllers\GroupController::class, 'show']);
 });
 
 

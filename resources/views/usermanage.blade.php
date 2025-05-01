@@ -60,7 +60,7 @@
         <div class="col-md-3 col-lg-2 bg-light sidebar">
             <div class="list-group mt-3">
                 <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="#" class="list-group-item list-group-item-action">Manajemen Kelompok</a>
+                <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action">Manajemen Grup</a>
                 <a href="#" class="list-group-item list-group-item-action">Manajemen Data</a>
             </div>
         </div>
