@@ -2,7 +2,13 @@
 
 @section('content')
 
+<!-- Mapbox CSS -->
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
 
+<!-- Pass Mapbox token to JavaScript -->
+<script>
+    const MAPBOX_TOKEN = "{{ config('services.mapbox.token', env('MAPBOX_TOKEN')) }}";
+</script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
@@ -29,6 +35,18 @@
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 ps-md-4">
+            
+            <!-- Mapbox Map Container -->
+            <div id="map" class="mb-4 rounded shadow-sm" style="height: 400px;">
+                <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading map... If the map doesn't appear, please check your Mapbox token in the .env file.</p>
+                    </div>
+                </div>
+            </div>
 
 
             <div id="detailContainer" class="row mb-4" style="display: none;">
@@ -241,57 +259,207 @@
     tr:hover {
         background-color: #f8f9fa;
     }
+    
+    /* Mapbox popup styles */
+    .mapboxgl-popup {
+        max-width: 300px;
+    }
+    .mapboxgl-popup-content {
+        padding: 15px;
+    }
+    .map-popup-content h5 {
+        margin-top: 0;
+        margin-bottom: 8px;
+    }
+    .map-popup-content p {
+        margin-bottom: 5px;
+    }
 </style>
 
 @section('scripts')
+<!-- Mapbox JS -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+
 <script>
-    document.querySelectorAll('tbody tr').forEach(row => {
-        row.addEventListener('click', async () => {
-            const dataId = row.querySelector('td[data-id]').dataset.id;
-            if (!dataId) return;
-            
-            // Show the detail container
-            const detailContainer = document.getElementById('detailContainer');
-            detailContainer.style.display = 'flex';
-            
-            try {
-                // Fetch data details
-                const response = await fetch(`/api/data/${dataId}`);
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Update detail fields
-                document.getElementById('detail-uploader').textContent = data.uploader || '-';
-                document.getElementById('detail-lat').textContent = data.lat || '-';
-                document.getElementById('detail-long').textContent = data.long || '-';
-                document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
-                document.getElementById('detail-subLocality').textContent = data.subLocality || '-';
-                document.getElementById('detail-locality').textContent = data.locality || '-';
-                document.getElementById('detail-subAdmin').textContent = data.subAdmin || '-';
-                document.getElementById('detail-adminArea').textContent = data.adminArea || '-';
-                document.getElementById('detail-postalCode').textContent = data.postalCode || '-';
-                document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
-                
-                // Handle image
-                const img = document.getElementById('detail-image');
-                const placeholder = document.getElementById('image-placeholder');
-                
-                if (data.image_url) {
-                    img.src = data.image_url;
-                    img.style.display = 'block';
-                    placeholder.style.display = 'none';
-                } else {
-                    img.style.display = 'none';
-                    placeholder.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                alert(`Error fetching data details: ${error.message}`);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Mapbox map
+        mapboxgl.accessToken = MAPBOX_TOKEN; // Using token from the variable we defined
+        
+        try {
+            // Check if token is valid
+            if (!MAPBOX_TOKEN || MAPBOX_TOKEN === "" || MAPBOX_TOKEN.includes("your_mapbox")) {
+                throw new Error('Invalid or missing Mapbox token');
             }
-        });
+            
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [107.6191, -6.9175], // Default center (Bandung)
+                zoom: 10
+            });
+            
+            // Add error handler for map load failures
+            map.on('error', function(e) {
+                console.error('Mapbox error:', e);
+                document.getElementById('map').innerHTML = 
+                    '<div class="alert alert-warning">Error loading map. Please check your Mapbox token.</div>';
+            });
+        
+            // Add navigation controls
+            map.addControl(new mapboxgl.NavigationControl());
+            
+            // Add markers for all data points
+            let markers = [];
+            
+            // Function to load data points and add markers
+            async function loadDataPoints() {
+                try {
+                    // Get all table rows
+                    const rows = document.querySelectorAll('tbody tr');
+                    
+                    rows.forEach(row => {
+                        const dataId = row.querySelector('td[data-id]')?.dataset.id;
+                        if (!dataId) return;
+                        
+                        // Get lat/long from the row if available
+                        const cells = row.querySelectorAll('td');
+                        let lat, long, uploader, location;
+                        
+                        // Extract data from table cells if available
+                        // This depends on your table structure, adjust indices as needed
+                        if (cells.length >= 5) {
+                            uploader = cells[1]?.textContent || 'Unknown';
+                            location = cells[4]?.textContent || 'Unknown';
+                        }
+                        
+                        // Add click event to row that also centers the map on the marker
+                        row.addEventListener('click', async () => {
+                            const dataId = row.querySelector('td[data-id]').dataset.id;
+                            if (!dataId) return;
+                            
+                            // Show the detail container
+                            const detailContainer = document.getElementById('detailContainer');
+                            detailContainer.style.display = 'flex';
+                            
+                            try {
+                                // Fetch data details
+                                const response = await fetch(`/api/data/${dataId}`);
+                                if (!response.ok) {
+                                    throw new Error(`Error: ${response.statusText}`);
+                                }
+                                
+                                const data = await response.json();
+                                
+                                // Update detail fields
+                                document.getElementById('detail-uploader').textContent = data.uploader || '-';
+                                document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
+                                document.getElementById('detail-lat').textContent = data.lat || '-';
+                                document.getElementById('detail-long').textContent = data.long || '-';
+                                document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
+                                document.getElementById('detail-subLocality').textContent = data.subLocality || '-';
+                                document.getElementById('detail-locality').textContent = data.locality || '-';
+                                document.getElementById('detail-subAdmin').textContent = data.subAdmin || '-';
+                                document.getElementById('detail-adminArea').textContent = data.adminArea || '-';
+                                document.getElementById('detail-postalCode').textContent = data.postalCode || '-';
+                                
+                                // Handle image
+                                const imageElement = document.getElementById('detail-image');
+                                const imagePlaceholder = document.getElementById('image-placeholder');
+                                
+                                if (data.image_url) {
+                                    imageElement.src = data.image_url;
+                                    imageElement.style.display = 'block';
+                                    imagePlaceholder.style.display = 'none';
+                                } else {
+                                    imageElement.style.display = 'none';
+                                    imagePlaceholder.style.display = 'block';
+                                }
+                                
+                                // Center map on this location if coordinates are available
+                                if (data.lat && data.long) {
+                                    map.flyTo({
+                                        center: [data.long, data.lat],
+                                        zoom: 15,
+                                        essential: true
+                                    });
+                                }
+                                
+                                // Scroll to detail container
+                                detailContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                
+                            } catch (error) {
+                                console.error('Error fetching data details:', error);
+                                alert('Failed to load data details. Please try again.');
+                            }
+                        });
+                    });
+                    
+                    // Fetch all data points for the map
+                    const response = await fetch('/api/data');
+                    if (!response.ok) {
+                        throw new Error(`Error: ${response.statusText}`);
+                    }
+                    
+                    const allData = await response.json();
+                    
+                    // Add markers for each data point
+                    allData.forEach(point => {
+                        if (point.lat && point.long) {
+                            // Create popup content
+                            const popupContent = `
+                                <div class="map-popup-content">
+                                    <h5>${point.uploader || 'Unknown'}</h5>
+                                    <p><strong>Area:</strong> ${point.thoroughfare || '-'}</p>
+                                    <p><strong>Waktu:</strong> ${point.createdAt || '-'}</p>
+                                    <p><strong>Koordinat:</strong> ${point.lat}, ${point.long}</p>
+                                </div>
+                            `;
+                            
+                            // Create popup
+                            const popup = new mapboxgl.Popup({ offset: 25 })
+                                .setHTML(popupContent);
+                            
+                            // Create marker
+                            const marker = new mapboxgl.Marker()
+                                .setLngLat([point.long, point.lat])
+                                .setPopup(popup)
+                                .addTo(map);
+                            
+                            markers.push(marker);
+                            
+                            // Add click event to marker that shows details
+                            marker.getElement().addEventListener('click', async () => {
+                                // Find the corresponding row in the table
+                                const row = document.querySelector(`tbody tr td[data-id="${point.id}"]`)?.parentElement;
+                                if (row) {
+                                    // Simulate a click on the row
+                                    row.click();
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Fit map to markers if there are any
+                    if (markers.length > 0) {
+                        const bounds = new mapboxgl.LngLatBounds();
+                        markers.forEach(marker => {
+                            bounds.extend(marker.getLngLat());
+                        });
+                        map.fitBounds(bounds, { padding: 50 });
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading data points:', error);
+                }
+            }
+            
+            // Load data points when map is loaded
+            map.on('load', loadDataPoints);
+        } catch (error) {
+            console.error('Error initializing map:', error);
+            document.getElementById('map').innerHTML = 
+                `<div class="alert alert-danger">Error initializing map: ${error.message}</div>`;
+        }
     });
 </script>
 @endsection

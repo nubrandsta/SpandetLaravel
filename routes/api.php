@@ -25,4 +25,5 @@ Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->
     Route::post('/upload', [AuthController::class, 'uploadData']);
 });
 
+Route::get('/data', [DataController::class, 'index']);
 Route::get('/data/{id}', [DataController::class, 'show']);

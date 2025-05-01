@@ -143,8 +143,8 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <button class="btn btn-primary mb-3" id="createUserBtn">Tambah Pengguna</button>
-                                <button class="btn btn-info mb-3" id="editNameBtn">Ubah Nama Lengkap</button>
-                                <button class="btn btn-info mb-3" id="editGroupBtn">Ubah Grup</button>
+                                <button class="btn btn-primary mb-3" id="editNameBtn">Ubah Nama Lengkap</button>
+                                <button class="btn btn-primary mb-3" id="editGroupBtn">Ubah Grup</button>
                                 <button class="btn btn-warning mb-3" id="resetPasswordBtn">Reset Kata Sandi</button>
                                 <button class="btn btn-danger mb-3" id="deleteUserBtn">Hapus Pengguna</button>
                             </div>
