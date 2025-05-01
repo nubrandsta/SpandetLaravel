@@ -20,10 +20,11 @@ Route::middleware('guest')->group(function() {
 
 
 Route::middleware(['auth'])->group(function () {
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     
-    // User Management Routes
+    // User Management
     Route::get('/user-management', [UserController::class, 'index'])->name('user.management');
     Route::post('/user', [UserController::class, 'store'])->name('user.store');
     Route::put('/user/{user}/name', [UserController::class, 'updateName'])->name('user.update.name');
@@ -33,16 +34,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/users/{user}', [UserController::class, 'show']);
     Route::get('/api/groups', [UserController::class, 'getGroups']);
     
-    // Group Management Routes
+    // Group Management
     Route::get('/group-management', [GroupController::class, 'index'])->name('group.management');
     Route::post('/group', [GroupController::class, 'store'])->name('group.store');
     Route::put('/group/{group}/description', [GroupController::class, 'updateDescription'])->name('group.update.description');
     Route::delete('/group/{group}', [GroupController::class, 'destroy'])->name('group.destroy');
     Route::get('/api/groups/{groupName}', [GroupController::class, 'show']);
     
-    // Data Management Routes
+    // Data Management
     Route::get('/data-management', [DataManagementController::class, 'index'])->name('data.management');
+    Route::get('/data-management/export', [DataManagementController::class, 'export'])->name('data.export');
     Route::delete('/api/data/{id}', [DataManagementController::class, 'destroy']);
+    Route::get('/data-management/export-excel', [DataManagementController::class, 'exportExcel'])->name('data.export.excel');
 });
 
 
