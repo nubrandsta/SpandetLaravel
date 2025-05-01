@@ -56,7 +56,7 @@
                 <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
                 <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action">Manajemen Akun</a>
                 <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action active">Manajemen Grup</a>
-                <a href="#" class="list-group-item list-group-item-action">Manajemen Data</a>
+                <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action">Manajemen Data</a>
             </div>
         </div>
 

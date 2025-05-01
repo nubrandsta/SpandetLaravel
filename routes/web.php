@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\DataManagementController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function() {
     return Auth::check() ? redirect('/dashboard') : redirect('/login');
@@ -15,62 +19,30 @@ Route::middleware('guest')->group(function() {
 
 
 
-Route::middleware('auth')->group(function() {
-    Route::get('/dashboard', function() {
-    $query = \App\Models\Data::query();
-
-    if ($search = request('search')) {
-        $query->where(function($q) use ($search) {
-            $q->where('uploader', 'like', "%{$search}%")
-                ->orWhere('group', 'like', "%{$search}%")
-                ->orWhere('spandukCount', 'like', "%{$search}%")
-                ->orWhere('thoroughfare', 'like', "%{$search}%")
-                ->orWhere('subLocality', 'like', "%{$search}%")
-                ->orWhere('locality', 'like', "%{$search}%")
-                ->orWhere('subAdmin', 'like', "%{$search}%")
-                ->orWhere('adminArea', 'like', "%{$search}%")
-                ->orWhere('postalCode', 'like', "%{$search}%");
-        });
-    }
-
-    $sortColumns = ['created_at', 'uploader', 'group', 'spandukCount', 'thoroughfare', 'subLocality', 'locality', 'subAdmin', 'adminArea', 'postalCode'];
-    $sort = request('sort');
-    $direction = request('direction');
-    
-    if ($sort && in_array($sort, $sortColumns)) {
-        if ($direction === 'asc') {
-            $query->orderBy($sort);
-        } else {
-            $query->orderByDesc($sort);
-        }
-    } else {
-        // Default sorting by created_at desc
-        $query->orderByDesc('created_at');
-    }
-
-    $data = $query->paginate(50)
-        ->appends(request()->query());
-    
-    return view('dashboard', ['data' => $data]);
-})->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    // User management routes
-    Route::get('/user-management', [\App\Http\Controllers\UserController::class, 'index'])->name('user.management');
-    Route::post('/user', [\App\Http\Controllers\UserController::class, 'store'])->name('user.store');
-    Route::put('/user/{user}/name', [\App\Http\Controllers\UserController::class, 'updateName']);
-    Route::put('/user/{user}/group', [\App\Http\Controllers\UserController::class, 'updateGroup']);
-    Route::post('/user/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword']);
-    Route::delete('/user/{user}', [\App\Http\Controllers\UserController::class, 'destroy']);
     
-    // Group management routes
-    Route::get('/group-management', [\App\Http\Controllers\GroupController::class, 'index'])->name('group.management');
-    Route::post('/group', [\App\Http\Controllers\GroupController::class, 'store'])->name('group.store');
-    Route::put('/group/{group}/description', [\App\Http\Controllers\GroupController::class, 'updateDescription']);
-    Route::delete('/group/{group}', [\App\Http\Controllers\GroupController::class, 'destroy']);
+    // User Management Routes
+    Route::get('/user-management', [UserController::class, 'index'])->name('user.management');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::put('/user/{user}/name', [UserController::class, 'updateName'])->name('user.update.name');
+    Route::put('/user/{user}/group', [UserController::class, 'updateGroup'])->name('user.update.group');
+    Route::post('/user/{user}/reset-password', [UserController::class, 'resetPassword'])->name('user.reset.password');
+    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/api/users/{user}', [UserController::class, 'show']);
+    Route::get('/api/groups', [UserController::class, 'getGroups']);
     
-    // API routes
-    Route::get('/api/groups', [\App\Http\Controllers\UserController::class, 'getGroups']);
-    Route::get('/api/groups/{groupName}', [\App\Http\Controllers\GroupController::class, 'show']);
+    // Group Management Routes
+    Route::get('/group-management', [GroupController::class, 'index'])->name('group.management');
+    Route::post('/group', [GroupController::class, 'store'])->name('group.store');
+    Route::put('/group/{group}/description', [GroupController::class, 'updateDescription'])->name('group.update.description');
+    Route::delete('/group/{group}', [GroupController::class, 'destroy'])->name('group.destroy');
+    Route::get('/api/groups/{groupName}', [GroupController::class, 'show']);
+    
+    // Data Management Routes
+    Route::get('/data-management', [DataManagementController::class, 'index'])->name('data.management');
+    Route::delete('/api/data/{id}', [DataManagementController::class, 'destroy']);
 });
 
 
