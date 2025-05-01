@@ -85,9 +85,6 @@ class UserController extends Controller
         // Get all groups from the groups table
         $allGroups = \App\Models\Group::pluck('group_name')->toArray();
         
-        // Log the groups from database
-        \Illuminate\Support\Facades\Log::info('All groups from database:', $allGroups);
-        
         // Return all groups except admin
         $filteredGroups = array_values(array_filter($allGroups, function($group) {
             return $group !== 'admin';

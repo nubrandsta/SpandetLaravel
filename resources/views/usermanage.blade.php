@@ -473,58 +473,40 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Get current group from the user details panel
         const currentGroup = document.getElementById('detailGroup').textContent;
-        console.log('Current group:', currentGroup);
         
         // Populate the group select dropdown with available groups
         const groupSelect = document.getElementById('groupSelect');
         groupSelect.innerHTML = '';
-        console.log('Cleared groupSelect dropdown');
         
         try {
             // Fetch groups from the API
-            console.log('Fetching groups from /api/groups');
             const response = await fetch('/api/groups');
-            console.log('API response status:', response.status);
             
             if (!response.ok) {
                 throw new Error('Failed to fetch groups');
             }
             
-            const responseText = await response.text();
-            console.log('Raw API response:', responseText);
-            
-            // Parse the JSON response
-            const allGroups = JSON.parse(responseText);
-            console.log('Groups fetched from database (parsed):', allGroups);
-            console.log('Number of groups returned:', Array.isArray(allGroups) ? allGroups.length : 'Not an array');
-            console.log('Type of allGroups:', typeof allGroups);
+            const allGroups = await response.json();
             
             // Add all groups except the current one
             let optionsAdded = 0;
             
             if (Array.isArray(allGroups)) {
                 allGroups.forEach(group => {
-                    console.log('Processing group:', group, 'Current group:', currentGroup, 'Match?', group === currentGroup);
                     // Skip the current group as we don't want to change to the same group
                     if (group !== currentGroup) {
                         const option = document.createElement('option');
                         option.value = group;
                         option.textContent = group;
                         groupSelect.appendChild(option);
-                        console.log('Added group option:', group);
                         optionsAdded++;
-                    } else {
-                        console.log('Skipping current group:', group);
                     }
                 });
             } else {
-                console.error('Groups data is not an array:', allGroups);
+                console.error('Groups data is not an array');
                 alert('Error: Data grup tidak valid. Silakan hubungi administrator.');
                 return;
             }
-            
-            console.log('Total options added to groupSelect:', optionsAdded);
-            console.log('Final dropdown HTML:', groupSelect.innerHTML);
             
             // If no options were added, show a message
             if (optionsAdded === 0) {
@@ -536,7 +518,6 @@ document.addEventListener('DOMContentLoaded', function() {
             editGroupModal.show();
         } catch (error) {
             console.error('Error fetching groups:', error);
-            console.error('Error details:', error.stack);
             alert('Gagal memuat daftar grup. Silakan coba lagi.');
         }
     });
