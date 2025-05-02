@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 // Apply session middleware explicitly to auth routes
 Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/change-password', [\App\Http\Controllers\Api\ChangePasswordController::class, 'update']);
 
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/validate-token', [AuthController::class, 'validateToken']);

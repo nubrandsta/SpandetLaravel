@@ -15,6 +15,10 @@ Route::get('/', function() {
 Route::middleware('guest')->group(function() {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->middleware('web');
+    
+    // Change Password Routes
+    Route::get('/change-password', [\App\Http\Controllers\Auth\ChangePasswordController::class, 'show'])->name('password.change.form');
+    Route::post('/change-password', [\App\Http\Controllers\Auth\ChangePasswordController::class, 'update'])->name('password.change');
 });
 
 

@@ -26,7 +26,10 @@
                     <input type="checkbox" class="form-check-input" id="remember" name="remember">
                     <label class="form-check-label" for="remember">Remember me</label>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                <div class="text-center">
+                    <a href="{{ route('password.change.form') }}" class="text-decoration-none">Ubah Password</a>
+                </div>
             </form>
         </div>
     </div>
