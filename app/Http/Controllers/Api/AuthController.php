@@ -151,10 +151,14 @@ class AuthController extends Controller
                 'image' => 'required|image|max:2048'
             ]);
 
-            // Store image directly in public/images directory
+            // Store image directly in public_html/images directory using env variable
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $imageName);
+            
+            // Use environment variable for public_html path
+            $publicHtmlPath = env('PUBLIC_HTML_PATH', '/home/spap8534/public_html') . '/images';
+            $image->move($publicHtmlPath, $imageName);
+            
             // Set the image URL to be directly accessible
             $imageUrl = '/images/' . $imageName;
 
