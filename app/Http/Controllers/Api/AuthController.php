@@ -153,14 +153,17 @@ class AuthController extends Controller
 
             // Store image directly in public_html/images directory using env variable
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            // Generate a random 32 character filename with original extension for security
+            $extension = $image->getClientOriginalExtension();
+            $randomName = Str::random(32) . '.' . $extension;
             
             // Use environment variable for public_html path
             $publicHtmlPath = env('PUBLIC_HTML_PATH', '/home/spap8534/public_html') . '/images';
-            $image->move($publicHtmlPath, $imageName);
+            $image->move($publicHtmlPath, $randomName);
             
             // Set the image URL to be directly accessible
-            $imageUrl = '/images/' . $imageName;
+            $imageUrl = '/images/' . $randomName;
 
             // Create data record
             DB::table('data')->insert([
