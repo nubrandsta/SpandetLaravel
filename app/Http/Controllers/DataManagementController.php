@@ -129,10 +129,10 @@ class DataManagementController extends Controller
             
             // Add data rows
             foreach ($data as $item) {
-                // Format image URL with IP address as domain
+                // Format image URL with spandet.my.id domain
                 $imageUrl = '';
                 if (!empty($item->imgURI)) {
-                    $imageUrl = 'http://' . $serverIp . '/' . ltrim($item->imgURI, '/');
+                    $imageUrl = 'https://spandet.my.id/' . ltrim($item->imgURI, '/');
                 }
                 
                 fputcsv($handle, [
@@ -177,24 +177,34 @@ class DataManagementController extends Controller
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
             
-            // Set column headers
-            $sheet->setCellValue('A1', 'ID');
-            $sheet->setCellValue('B1', 'Waktu');
-            $sheet->setCellValue('C1', 'Uploader');
-            $sheet->setCellValue('D1', 'Kelompok');
-            $sheet->setCellValue('E1', 'Jml Spanduk');
-            $sheet->setCellValue('F1', 'Area 1');
-            $sheet->setCellValue('G1', 'Area 2');
-            $sheet->setCellValue('H1', 'Area 3');
-            $sheet->setCellValue('I1', 'Area 4');
-            $sheet->setCellValue('J1', 'Area 5');
-            $sheet->setCellValue('K1', 'Kode Pos');
-            $sheet->setCellValue('L1', 'Latitude');
-            $sheet->setCellValue('M1', 'Longitude');
-            $sheet->setCellValue('N1', 'Image URL');
+            // Add title row and merge cells
+            $sheet->setCellValue('A1', 'DATA MEDIA REKLAME');
+            $sheet->mergeCells('A1:N1');
+            
+            // Style the title row
+            $titleStyle = $sheet->getStyle('A1');
+            $titleStyle->getFont()->setBold(true);
+            $titleStyle->getFont()->setSize(16);
+            $titleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            
+            // Set column headers (now in row 2)
+            $sheet->setCellValue('A2', 'ID');
+            $sheet->setCellValue('B2', 'Waktu');
+            $sheet->setCellValue('C2', 'Uploader');
+            $sheet->setCellValue('D2', 'Kelompok');
+            $sheet->setCellValue('E2', 'Jml Spanduk');
+            $sheet->setCellValue('F2', 'Area 1');
+            $sheet->setCellValue('G2', 'Area 2');
+            $sheet->setCellValue('H2', 'Area 3');
+            $sheet->setCellValue('I2', 'Area 4');
+            $sheet->setCellValue('J2', 'Area 5');
+            $sheet->setCellValue('K2', 'Kode Pos');
+            $sheet->setCellValue('L2', 'Latitude');
+            $sheet->setCellValue('M2', 'Longitude');
+            $sheet->setCellValue('N2', 'Image URL');
             
             // Style the header row
-            $headerStyle = $sheet->getStyle('A1:N1');
+            $headerStyle = $sheet->getStyle('A2:N2');
             $headerStyle->getFont()->setBold(true);
             $headerStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
@@ -235,12 +245,12 @@ class DataManagementController extends Controller
             $serverIp = $request->server('SERVER_ADDR') ?: $request->server('LOCAL_ADDR') ?: '127.0.0.1';
             
             // Fill data rows
-            $row = 2;
+            $row = 3; // Start from row 3 since we have title and header rows
             foreach ($data as $item) {
-                // Format image URL with IP address as domain
+                // Format image URL with spandet.my.id domain
                 $imageUrl = '';
                 if (!empty($item->imgURI)) {
-                    $imageUrl = 'http://' . $serverIp . '/' . ltrim($item->imgURI, '/');
+                    $imageUrl = 'https://spandet.my.id/' . ltrim($item->imgURI, '/');
                 }
                 
                 $sheet->setCellValue('A' . $row, $item->id);
