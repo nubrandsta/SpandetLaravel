@@ -151,10 +151,12 @@ class AuthController extends Controller
                 'image' => 'required|image|max:2048'
             ]);
 
-            // Store image
-            $imagePath = $request->file('image')->store('images', 'public');
-            // Use relative path instead of full URL with domain
-            $imageUrl = '/storage/' . $imagePath;
+            // Store image directly in public/images directory
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $imageName);
+            // Set the image URL to be directly accessible
+            $imageUrl = '/images/' . $imageName;
 
             // Create data record
             DB::table('data')->insert([
