@@ -36,49 +36,56 @@
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 ps-md-4">
             
-            <!-- Mapbox Map Container -->
-            <div id="map" class="mb-4 rounded shadow-sm" style="height: 400px;">
-                <div class="d-flex justify-content-center align-items-center h-100 bg-light">
-                    <div class="text-center">
-                        <div class="spinner-border text-primary mb-3" role="status">
-                            <span class="visually-hidden">Loading...</span>
+            <!-- Map and Image Container -->
+            <div class="row mb-4">
+                <!-- Mapbox Map Container - Takes 3/4 width -->
+                <div class="col-md-9">
+                    <div id="map" class="rounded shadow-sm" style="height: 400px;">
+                        <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary mb-3" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>Loading map... If the map doesn't appear, please check your Mapbox token in the .env file.</p>
+                            </div>
                         </div>
-                        <p>Loading map... If the map doesn't appear, please check your Mapbox token in the .env file.</p>
+                    </div>
+                </div>
+                
+                <!-- Image Panel - Takes 1/4 width -->
+                <div class="col-md-3">
+                    <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
+                        <img id="detail-image" src="" class="img-fluid" style="display: none;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" />
+                        <div id="image-placeholder" class="text-muted w-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                            </svg>
+                            <div class="small mt-2">No image available</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
+            <!-- Detail Panel - Full Width -->
             <div id="detailContainer" class="row mb-4" style="display: none;">
-    <div class="col-md-8">
-        <div class="bg-white p-3 rounded shadow-sm">
-            <div class="row small g-2">
-                <div class="col-6"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
-                <div class="col-6"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
-                <div class="col-6"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
-                <div class="col-6"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
-                <div class="col-6"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
-                <div class="col-6"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
-                <div class="col-6"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
-                <div class="col-6"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
-                <div class="col-6"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
-                <div class="col-6"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
-            
+                <div class="col-12">
+                    <div class="bg-white p-3 rounded shadow-sm">
+                        <div class="row small g-2">
+                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
-            <img id="detail-image" src="" class="img-fluid" style="display: none;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" />
-            <div id="image-placeholder" class="text-muted w-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
-                </svg>
-                <div class="small mt-2">No image available</div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
@@ -382,10 +389,12 @@
                                         zoom: 15,
                                         essential: true
                                     });
+                                    
+                                    // Scroll to map container when a row is clicked
+                                    document.querySelector('#map').scrollIntoView({ behavior: 'smooth', block: 'start' });
                                 }
                                 
-                                // Scroll to detail container
-                                detailContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                // No need to scroll to detail container as we now scroll to map
                                 
                             } catch (error) {
                                 console.error('Error fetching data details:', error);
@@ -427,13 +436,16 @@
                             
                             markers.push(marker);
                             
-                            // Add click event to marker that shows details
+                            // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
                                 // Find the corresponding row in the table
                                 const row = document.querySelector(`tbody tr td[data-id="${point.id}"]`)?.parentElement;
                                 if (row) {
                                     // Simulate a click on the row
                                     row.click();
+                                    
+                                    // Ensure map is scrolled into view
+                                    document.querySelector('#map').scrollIntoView({ behavior: 'smooth', block: 'start' });
                                 }
                             });
                         }

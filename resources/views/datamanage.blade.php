@@ -80,8 +80,8 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
                     <div class="d-flex gap-2">
-                        <a href="{{ route('data.export', request()->query()) }}" class="btn btn-success">Export CSV</a>
-                        <a href="{{ route('data.export.excel', request()->query()) }}" class="btn btn-info">Export Excel</a>
+                        <a href="{{ route('data.export', request()->query()) }}" class="btn btn-info">Export CSV</a>
+                        <a href="{{ route('data.export.excel', request()->query()) }}" class="btn btn-success">Export Excel</a>
                     </div>
                     <div class="d-flex gap-2">
                         <form method="GET" class="d-flex">
