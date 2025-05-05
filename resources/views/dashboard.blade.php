@@ -418,7 +418,9 @@
                             const popupContent = `
                                 <div class="map-popup-content">
                                     <h5>${point.uploader || 'Unknown'}</h5>
+                                    <p><strong>Jumlah Spanduk:</strong> ${point.spandukCount || '0'}</p>
                                     <p><strong>Area:</strong> ${point.thoroughfare || '-'}</p>
+                                
                                     <p><strong>Waktu:</strong> ${point.createdAt || '-'}</p>
                                     <p><strong>Koordinat:</strong> ${point.lat}, ${point.long}</p>
                                 </div>
