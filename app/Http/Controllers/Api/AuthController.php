@@ -48,6 +48,8 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'username' => $user->username,
+                    'full_name' => $user->full_name,
+                    'group' => $user->group,
                     'session' => $token
                 ]);
             }
@@ -95,7 +97,9 @@ class AuthController extends Controller
             
             return response()->json([
                 'status' => 'success',
-                'username' => $user->username
+                'username' => $user->username,
+                'full_name' => $user->full_name,
+                'group' => $user->group
             ]);
 
         } catch (\Exception $e) {
@@ -148,6 +152,7 @@ class AuthController extends Controller
                 'subadmin' => 'required|string',
                 'adminArea' => 'required|string',
                 'postalcode' => 'required|string',
+                'spandukCount' => 'required|integer',
                 'image' => 'required|image|max:2048'
             ]);
 
@@ -178,6 +183,7 @@ class AuthController extends Controller
                 'subadmin' => $validatedData['subadmin'],
                 'adminArea' => $validatedData['adminArea'],
                 'postalcode' => $validatedData['postalcode'],
+                'spandukCount' => $validatedData['spandukCount'],
                 'imgURI' => $imageUrl,
                 'created_at' => now(),
                 'updated_at' => now()
