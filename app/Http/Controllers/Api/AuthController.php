@@ -22,12 +22,7 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $user = Auth::user();
 
-                if (!$user->group || !in_array($user->group, ['admin', 'auditors'])) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'User not authorized'
-                    ], 401);
-                }
+                // All users are allowed to log in regardless of group
 
                 $token = Str::random(60);
                 
@@ -40,7 +35,7 @@ class AuthController extends Controller
                 ]);
 
                 // Cleanup expired sessions
-                $expiration = 7200;
+                $expiration = 604800; // 1 week
                 DB::table('sessions')
                     ->where('last_activity', '<', now()->getTimestamp() - $expiration)
                     ->delete();
@@ -85,7 +80,7 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $expiration = 7200; // 2 hours
+            $expiration = 604800; // 1 week
             if ((now()->getTimestamp() - $session->last_activity) > $expiration) {
                 return response()->json([
                     'status' => 'error',
@@ -131,7 +126,7 @@ class AuthController extends Controller
             }
 
             // Check token expiration
-            $expiration = 7200;
+            $expiration = 604800; // 1 week
             if ((now()->getTimestamp() - $session->last_activity) > $expiration) {
                 return response()->json([
                     'status' => 'error',
