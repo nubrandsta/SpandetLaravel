@@ -73,7 +73,9 @@
                     <div class="bg-white p-3 rounded shadow-sm">
                         <div class="row small g-2">
                             <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
@@ -361,7 +363,9 @@
                                 
                                 // Update detail fields
                                 document.getElementById('detail-uploader').textContent = data.uploader || '-';
+                                document.getElementById('detail-group').textContent = data.group || '-';
                                 document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
+                                document.getElementById('detail-spandukCount').textContent = data.spandukCount || '-';
                                 document.getElementById('detail-lat').textContent = data.lat || '-';
                                 document.getElementById('detail-long').textContent = data.long || '-';
                                 document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
