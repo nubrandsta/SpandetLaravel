@@ -446,16 +446,49 @@
                             
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
-                                // Find the corresponding row in the table
-                                const row = document.querySelector(`tbody tr td[data-id="${point.id}"]`)?.parentElement;
-                                if (row) {
-                                    // Simulate a click on the row
-                                    row.click();
-                                    
-                                    // Don't scroll to the row in the table to avoid the bobbing effect
+                                // Show the detail container
+                                const detailContainer = document.getElementById('detailContainer');
+                                detailContainer.style.display = 'flex';
+                                
+                                // Fetch data details
+                                const response = await fetch(`/api/data/${point.id}`);
+                                if (!response.ok) {
+                                    throw new Error(`Error: ${response.statusText}`);
                                 }
-                            });
-                        }
+                                
+                                const data = await response.json();
+                                
+                                // Update detail fields
+                                document.getElementById('detail-uploader').textContent = data.uploader || '-';
+                                document.getElementById('detail-group').textContent = data.group || '-';
+                                document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
+                                document.getElementById('detail-spandukCount').textContent = data.spandukCount || '-';
+                                document.getElementById('detail-lat').textContent = data.lat || '-';
+                                document.getElementById('detail-long').textContent = data.long || '-';
+                                document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
+                                document.getElementById('detail-subLocality').textContent = data.subLocality || '-';
+                                document.getElementById('detail-locality').textContent = data.locality || '-';
+                                document.getElementById('detail-subAdmin').textContent = data.subAdmin || '-';
+                                document.getElementById('detail-adminArea').textContent = data.adminArea || '-';
+                                document.getElementById('detail-postalCode').textContent = data.postalCode || '-';
+                                
+                                // Handle image
+                                const imageElement = document.getElementById('detail-image');
+                                const imagePlaceholder = document.getElementById('image-placeholder');
+                                
+                                if (data.image_url) {
+                                    imageElement.src = data.image_url;
+                                    imageElement.style.display = 'block';
+                                    imagePlaceholder.style.display = 'none';
+                                } else {
+                                    imageElement.style.display = 'none';
+                                    imagePlaceholder.style.display = 'block';
+                                }
+                            } catch (error) {
+                                console.error('Error fetching data details:', error);
+                                alert('Failed to load data details. Please try again.');
+                            }
+                        });
                     });
                     
                 } catch (error) {
@@ -501,4 +534,4 @@
         </div>
     </div>
 </div>
-</script>
+<!-- Remove the extra closing script tag below -->
