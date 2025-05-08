@@ -55,7 +55,7 @@
                 <!-- Image Panel - Takes 1/4 width -->
                 <div class="col-md-3">
                     <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
-                        <img id="detail-image" src="" class="img-fluid" style="display: none;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" />
+                        <img id="detail-image" src="" class="img-fluid cursor-pointer" style="display: none; cursor: pointer;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" onclick="openImageModal(this.src)" />
                         <div id="image-placeholder" class="text-muted w-100">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -420,7 +420,7 @@
                             const popupContent = `
                                 <div class="map-popup-content">
                                     <h5>${point.uploader || 'Unknown'}</h5>
-                                    <p><strong>Jumlah Spanduk:</strong> ${point.spandukCount || '0'}</p>
+                                    <p><strong>Jumlah Spanduk:</strong> ${point.spandukCount}</p>
                                     <p><strong>Area:</strong> ${point.thoroughfare || '-'}</p>
                                 
                                     <p><strong>Waktu:</strong> ${point.createdAt || '-'}</p>
@@ -448,35 +448,54 @@
                                     // Simulate a click on the row
                                     row.click();
                                     
-                                    // Ensure map is scrolled into view
-                                    document.querySelector('#map').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    // Scroll to the row in the table
+                                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }
                             });
                         }
                     });
                     
-                    // Fit map to markers if there are any
-                    if (markers.length > 0) {
-                        const bounds = new mapboxgl.LngLatBounds();
-                        markers.forEach(marker => {
-                            bounds.extend(marker.getLngLat());
-                        });
-                        map.fitBounds(bounds, { padding: 50 });
-                    }
-                    
                 } catch (error) {
                     console.error('Error loading data points:', error);
+                    document.getElementById('map').innerHTML += 
+                        '<div class="alert alert-danger">Error loading data points. Please try again later.</div>';
                 }
             }
             
-            // Load data points when map is loaded
-            map.on('load', loadDataPoints);
+            // Load data points when the map is ready
+            map.on('load', function() {
+                loadDataPoints();
+            });
+            
         } catch (error) {
             console.error('Error initializing map:', error);
             document.getElementById('map').innerHTML = 
-                `<div class="alert alert-danger">Error initializing map: ${error.message}</div>`;
+                '<div class="alert alert-danger">Error initializing map. Please check your Mapbox token and try again.</div>';
+        }
+        
+        // Function to open image modal
+        function openImageModal(imageSrc) {
+            document.getElementById('modal-image').src = imageSrc;
+            var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+            imageModal.show();
         }
     });
 </script>
 @endsection
 @endsection
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Gambar Lengkap</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modal-image" src="" class="img-fluid" alt="Full Image">
+            </div>
+        </div>
+    </div>
+</div>
+</script>
