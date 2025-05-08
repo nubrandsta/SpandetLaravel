@@ -55,7 +55,7 @@
                 <!-- Image Panel - Takes 1/4 width -->
                 <div class="col-md-3">
                     <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
-                        <img id="detail-image" src="" class="img-fluid" style="display: none;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" />
+                        <img id="detail-image" src="" class="img-fluid cursor-pointer" style="display: none; cursor: pointer;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" onclick="openImageModal(this.src)" />
                         <div id="image-placeholder" class="text-muted w-100">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -481,6 +481,27 @@
                 `<div class="alert alert-danger">Error initializing map: ${error.message}</div>`;
         }
     });
+    // Function to open image modal
+    function openImageModal(imageSrc) {
+        document.getElementById('modal-image').src = imageSrc;
+        var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        imageModal.show();
+    }
 </script>
 @endsection
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Gambar Lengkap</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modal-image" src="" class="img-fluid" alt="Full Image">
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
