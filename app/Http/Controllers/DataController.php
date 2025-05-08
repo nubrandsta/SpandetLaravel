@@ -15,6 +15,7 @@ class DataController extends Controller
         return response()->json([
             'id' => $data->id,
             'uploader' => $data->uploader,
+            'group' => $data->group,
             'lat' => $data->lat,
             'long' => $data->long,
             'thoroughfare' => $data->thoroughfare,
@@ -24,6 +25,7 @@ class DataController extends Controller
             'adminArea' => $data->adminArea,
             'postalCode' => $data->postalCode,
             'createdAt' => $data->created_at->format('d M Y H:i:s'),
+            'spandukCount' => $data->spandukCount,
             'image_url' => $data->imgURI
         ]);
     }
@@ -35,6 +37,7 @@ class DataController extends Controller
             return [
                 'id' => $item->id,
                 'uploader' => $item->uploader,
+                'group' => $item->group,
                 'lat' => $item->lat,
                 'long' => $item->long,
                 'thoroughfare' => $item->thoroughfare,
@@ -44,6 +47,7 @@ class DataController extends Controller
                 'adminArea' => $item->adminArea,
                 'postalCode' => $item->postalCode,
                 'createdAt' => $item->created_at->format('d M Y H:i:s'),
+                'spandukCount' => $item->spandukCount,
                 'image_url' => $item->imgURI
             ];
         }));
