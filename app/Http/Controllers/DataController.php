@@ -15,6 +15,8 @@ class DataController extends Controller
         return response()->json([
             'id' => $data->id,
             'uploader' => $data->uploader,
+            'group' => $data->group,
+            'spandukCount' => $data->spandukCount,
             'lat' => $data->lat,
             'long' => $data->long,
             'thoroughfare' => $data->thoroughfare,
@@ -35,6 +37,8 @@ class DataController extends Controller
             return [
                 'id' => $item->id,
                 'uploader' => $item->uploader,
+                'group' => $item->group,
+                'spandukCount' => $item->spandukCount,
                 'lat' => $item->lat,
                 'long' => $item->long,
                 'thoroughfare' => $item->thoroughfare,

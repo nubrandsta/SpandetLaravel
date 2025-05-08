@@ -446,14 +446,48 @@
                             
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
-                                // Find the corresponding row in the table
-                                const row = document.querySelector(`tbody tr td[data-id="${point.id}"]`)?.parentElement;
-                                if (row) {
-                                    // Simulate a click on the row
-                                    row.click();
+                                try {
+                                    // Fetch data details directly without simulating row click
+                                    const detailResponse = await fetch(`/api/data/${point.id}`);
+                                    if (!detailResponse.ok) {
+                                        throw new Error(`Error: ${detailResponse.statusText}`);
+                                    }
                                     
-                                    // Scroll to the row in the table
-                                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    const data = await detailResponse.json();
+                                    
+                                    // Update detail fields
+                                    document.getElementById('detail-uploader').textContent = data.uploader || '-';
+                                    document.getElementById('detail-group').textContent = data.group || '-';
+                                    document.getElementById('detail-createdAt').textContent = data.createdAt || '-';
+                                    document.getElementById('detail-spandukCount').textContent = data.spandukCount || '-';
+                                    document.getElementById('detail-lat').textContent = data.lat || '-';
+                                    document.getElementById('detail-long').textContent = data.long || '-';
+                                    document.getElementById('detail-thoroughfare').textContent = data.thoroughfare || '-';
+                                    document.getElementById('detail-subLocality').textContent = data.subLocality || '-';
+                                    document.getElementById('detail-locality').textContent = data.locality || '-';
+                                    document.getElementById('detail-subAdmin').textContent = data.subAdmin || '-';
+                                    document.getElementById('detail-adminArea').textContent = data.adminArea || '-';
+                                    document.getElementById('detail-postalCode').textContent = data.postalCode || '-';
+                                    
+                                    // Update image
+                                    const imageContainer = document.getElementById('detail-image-container');
+                                    const imagePlaceholder = document.getElementById('detail-image-placeholder');
+                                    const detailImage = document.getElementById('detail-image');
+                                    
+                                    if (data.image_url) {
+                                        detailImage.src = data.image_url;
+                                        detailImage.style.display = 'block';
+                                        imagePlaceholder.style.display = 'none';
+                                    } else {
+                                        detailImage.style.display = 'none';
+                                        imagePlaceholder.style.display = 'flex';
+                                    }
+                                    
+                                    // No scrolling to map or row when marker is clicked
+                                    
+                                } catch (error) {
+                                    console.error('Error fetching data details:', error);
+                                    alert('Failed to load data details. Please try again.');
                                 }
                             });
                         }
