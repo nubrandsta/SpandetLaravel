@@ -229,7 +229,7 @@
 </div>
 
             <div class="d-flex justify-content-end">
-                {{ $data->links() }}
+                {{ $data->links('vendor.pagination.bootstrap-5') }}
             </div>
         </div>
     </div>
