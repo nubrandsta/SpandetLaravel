@@ -37,7 +37,7 @@
         <div class="col-md-9 col-lg-10 ps-md-4">
             
             <!-- Map and Image Container -->
-            <div class="row mb-4">
+            <div class="row mb-4 container mx-auto">
                 <!-- Mapbox Map Container - Takes 3/4 width -->
                 <div class="col-md-9">
                     <div id="map" class="rounded shadow-sm" style="height: 400px;">
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Detail Panel - Full Width -->
-            <div id="detailContainer" class="row mb-4" style="display: none;">
+            <div id="detailContainer" class="row mb-4 container mx-auto" style="display: none;">
                 <div class="col-12">
                     <div class="bg-white p-3 rounded shadow-sm">
                         <div class="row small g-2">
@@ -88,22 +88,24 @@
             </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
-    <h4>Tabel Data</h4>
-    <div class="d-flex gap-2">
-        <form method="GET" class="d-flex">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
-            </div>
-            <button type="submit" class="btn btn-primary ms-2">Cari</button>
-        </form>
-        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
-            <i class="bi-arrow-clockwise"></i> Refresh
-        </a>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+        <h4>Tabel Data</h4>
+        <div class="d-flex gap-2">
+            <form method="GET" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
+                </div>
+                <button type="submit" class="btn btn-primary ms-2">Cari</button>
+            </form>
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi-arrow-clockwise"></i> Refresh
+            </a>
+        </div>
     </div>
 </div>
 
-<div id="dataTableContainer">
+<div id="dataTableContainer" class="container">
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
                 <thead>
@@ -229,7 +231,7 @@
 </div>
 
             <div class="d-flex justify-content-end">
-                {{ $data->links('vendor.pagination.bootstrap-5') }}
+                {{ $data->links('vendor.pagination.simple-bootstrap-5') }}
             </div>
         </div>
     </div>
@@ -301,8 +303,8 @@
             const map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v12',
-                center: [107.6191, -6.9175], // Default center (Bandung)
-                zoom: 10
+                center: [104.4458, 0.9186], // Default center (Tanjung Pinang)
+                zoom: 12
             });
             
             // Add error handler for map load failures
