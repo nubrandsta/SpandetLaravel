@@ -504,4 +504,3 @@
         </div>
     </div>
 </div>
-<!-- Removed duplicate @endsection tag -->
