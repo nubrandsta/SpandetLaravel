@@ -31,7 +31,7 @@
 <div class="mb-4 d-flex flex-wrap gap-3">
     <!-- Detail Panel -->
     <div class="flex-grow-1" style="min-width: 300px;">
-        <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
+        <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;">
                         <div class="row small g-2">
                             <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
@@ -52,9 +52,9 @@
     <div style="min-width: 300px; max-width: 400px;">
         <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
             <img id="detail-image" 
-                 src="" 
-                 class="img-fluid cursor-pointer" 
-                 style="display: none; cursor: pointer;" 
+                  src="" 
+                  class="img-fluid cursor-pointer" 
+                  style="display: none; cursor: pointer; max-height: 100%; max-width: 100%; object-fit: contain;" 
                  onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block';document.getElementById('image-placeholder').innerHTML='<div class=\'text-muted\'>Failed to load image</div>'" 
                  onclick="openImageModal(this.src)" />
             <div id="image-placeholder" class="text-muted w-100 cursor-pointer" onclick="openImageModal(document.getElementById('detail-image').src)">
