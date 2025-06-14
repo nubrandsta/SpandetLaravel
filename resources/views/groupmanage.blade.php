@@ -23,141 +23,115 @@
     }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+<div>
     <div class="container">
-        <h1 class="h4 text-white mx-auto mb-0">Manajemen Grup</h1>
-        <a class="navbar-brand" href="#">{{ Auth::user()->full_name }}</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-light">Keluar</button>
-        </form>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 bg-light sidebar">
-            <div class="list-group mt-3">
-                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action">Manajemen Akun</a>
-                <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action active">Manajemen Grup</a>
-                <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action">Manajemen Data</a>
+        <h1>Manajemen Grup</h1>
+    
+        <div id="groupDetails" class="row mb-4" style="display: none;">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">Detail Grup</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Nama Grup:</strong> <span id="detailGroupName"></span></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Deskripsi:</strong> <span id="detailDescription"></span></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Dibuat pada:</strong> <span id="detailCreatedAt"></span></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p><strong>Diperbarui pada:</strong> <span id="detailUpdatedAt"></span></p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button id="editDescriptionBtn" class="btn btn-primary btn-sm">Edit Deskripsi</button>
+                        <button id="deleteGroupBtn" class="btn btn-danger btn-sm">Hapus Grup</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 ps-md-4">
-            <div class="container">
-                <h1>Manajemen Grup</h1>
-    
-                <div id="groupDetails" class="row mb-4" style="display: none;">
-                    <div class="card" style="width: 100%;">
-                        <div class="card-body">
-                            <h5 class="card-title">Detail Grup</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <p><strong>Nama Grup:</strong> <span id="detailGroupName"></span></p>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Daftar Grup</h5>
+                        <div class="d-flex">
+                            <form class="form-inline me-2" method="GET">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                                    <button type="submit" class="btn btn-primary ms-2">Cari</button>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <p><strong>Deskripsi:</strong> <span id="detailDescription"></span></p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <p><strong>Dibuat pada:</strong> <span id="detailCreatedAt"></span></p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <p><strong>Diperbarui pada:</strong> <span id="detailUpdatedAt"></span></p>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <button id="editDescriptionBtn" class="btn btn-primary btn-sm">Edit Deskripsi</button>
-                                <button id="deleteGroupBtn" class="btn btn-danger btn-sm">Hapus Grup</button>
-                            </div>
+                            </form>
+                            <a href="{{ route('group.management') }}" class="btn btn-outline-secondary me-2">
+                                <i class="bi-arrow-clockwise"></i> Refresh
+                            </a>
+                            <button id="createGroupBtn" class="btn btn-success">Tambah Grup</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Daftar Grup</h5>
-                                <div class="d-flex">
-                                    <form class="form-inline me-2" method="GET">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                            <button type="submit" class="btn btn-primary ms-2">Cari</button>
-                                        </div>
-                                    </form>
-                                    <a href="{{ route('group.management') }}" class="btn btn-outline-secondary me-2">
-                                        <i class="bi-arrow-clockwise"></i> Refresh
-                                    </a>
-                                    <button id="createGroupBtn" class="btn btn-success">Tambah Grup</button>
-                                </div>
-                            </div>
-                            
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <div class="d-flex align-items-center">
-                                                        <span>Nama Grup</span>
-                                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'group_name', 'direction' => (request('sort') === 'group_name' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
-                                                            <i class="bi bi-arrow-down-up"></i>
-                                                        </a>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex align-items-center">
-                                                        <span>Deskripsi</span>
-                                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'group_description', 'direction' => (request('sort') === 'group_description' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
-                                                            <i class="bi bi-arrow-down-up"></i>
-                                                        </a>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex align-items-center">
-                                                        <span>Dibuat Pada</span>
-                                                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => (request('sort') === 'created_at' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
-                                                            <i class="bi bi-arrow-down-up"></i>
-                                                        </a>
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($groups as $group)
-                                                <tr class="group-row" data-group-name="{{ $group->group_name }}">
-                                                    <td>{{ $group->group_name }}</td>
-                                                    <td>{{ $group->group_description }}</td>
-                                                    <td>{{ $group->created_at->format('d/m/Y H:i') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="d-flex justify-content-end mt-3">
-                                    {{ $groups->links() }}
-                                </div>
-                            </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="d-flex align-items-center">
+                                                <span>Nama Grup</span>
+                                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'group_name', 'direction' => (request('sort') === 'group_name' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
+                                                    <i class="bi bi-arrow-down-up"></i>
+                                                </a>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="d-flex align-items-center">
+                                                <span>Deskripsi</span>
+                                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'group_description', 'direction' => (request('sort') === 'group_description' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
+                                                    <i class="bi bi-arrow-down-up"></i>
+                                                </a>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="d-flex align-items-center">
+                                                <span>Dibuat Pada</span>
+                                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => (request('sort') === 'created_at' && request('direction') === 'asc') ? 'desc' : 'asc']) }}" class="text-decoration-none ms-2">
+                                                    <i class="bi bi-arrow-down-up"></i>
+                                                </a>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($groups as $group)
+                                        <tr class="group-row" data-group-name="{{ $group->group_name }}">
+                                            <td>{{ $group->group_name }}</td>
+                                            <td>{{ $group->group_description }}</td>
+                                            <td>{{ $group->created_at->format('d/m/Y H:i') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            {{ $groups->links() }}
                         </div>
                     </div>
                 </div>
@@ -409,5 +383,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection
 @endsection

@@ -40,6 +40,11 @@
             @auth
                 <!-- Sidebar -->
                 <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100 collapsed" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
+                    <div class="d-flex align-items-center justify-content-end p-2">
+                        <button class="btn btn-link text-primary d-block d-md-none" id="sidebarCollapseBtn" style="font-size: 1.5rem;">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </div>
                     <div class="list-group mt-3">
                         <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                         <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
@@ -123,6 +128,7 @@
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
             const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
             
             function toggleSidebar() {
                 sidebar.classList.toggle('collapsed');
@@ -130,6 +136,9 @@
             }
             
             sidebarToggle.addEventListener('click', toggleSidebar);
+            if (sidebarCollapseBtn) {
+                sidebarCollapseBtn.addEventListener('click', toggleSidebar);
+            }
             
             // Close sidebar on mobile when clicking outside
             document.addEventListener('click', function(event) {

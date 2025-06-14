@@ -10,116 +10,90 @@
     const MAPBOX_TOKEN = "{{ config('services.mapbox.token', env('MAPBOX_TOKEN')) }}";
 </script>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container-fluid">
-        <button class="btn btn-link text-white me-3" id="sidebarToggle">
-            <i class="bi bi-list fs-4"></i>
-        </button>
-        <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
-        <a class="navbar-brand" href="#">{{ Auth::user()->full_name }}</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-light">Keluar</button>
-        </form>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
-            <div class="list-group mt-3">
-                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
-                <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action">Manajemen Akun</a>
-                <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action">Manajemen Grup</a>
-                <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action">Manajemen Data</a>
+<!-- Main Content (full width) -->
+<div>
+    <!-- Map Container - Full Width -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div id="map" class="rounded shadow-sm" style="height: 500px;">
+                <div class="d-flex justify-content-center align-items-center h-100 bg-light">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading map... If the map doesn't appear, please check your Mapbox token in the .env file.</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 ms-auto" id="mainContent">
-            <!-- Map Container - Full Width -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div id="map" class="rounded shadow-sm" style="height: 500px;">
-                        <div class="d-flex justify-content-center align-items-center h-100 bg-light">
-                            <div class="text-center">
-                                <div class="spinner-border text-primary mb-3" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <p>Loading map... If the map doesn't appear, please check your Mapbox token in the .env file.</p>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Detail and Image Panels - Side by Side -->
+    <div class="row mb-4">
+        <!-- Detail Panel -->
+        <div class="col-md-8">
+            <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
+                <div class="row small g-2">
+                    <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
+                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
                 </div>
             </div>
-
-            <!-- Detail and Image Panels - Side by Side -->
-            <div class="row mb-4">
-                <!-- Detail Panel -->
-                <div class="col-md-8">
-                    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
-                        <div class="row small g-2">
-                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Image Panel -->
-                <div class="col-md-4">
-                    <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
-                        <img id="detail-image" 
-                             src="" 
-                             class="img-fluid cursor-pointer" 
-                             style="display: none; cursor: pointer;" 
-                             onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block';document.getElementById('image-placeholder').innerHTML='<div class=\'text-muted\'>Failed to load image</div>'" 
-                             onclick="openImageModal(this.src)" />
-                        <div id="image-placeholder" class="text-muted w-100 cursor-pointer" onclick="openImageModal(document.getElementById('detail-image').src)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
-                            </svg>
-                            <div class="small mt-2">No image available</div>
-                        </div>
-                    </div>
+        </div>
+        
+        <!-- Image Panel -->
+        <div class="col-md-4">
+            <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
+                <img id="detail-image" 
+                     src="" 
+                     class="img-fluid cursor-pointer" 
+                     style="display: none; cursor: pointer;" 
+                     onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block';document.getElementById('image-placeholder').innerHTML='<div class=\'text-muted\'>Failed to load image</div>'" 
+                     onclick="openImageModal(this.src)" />
+                <div id="image-placeholder" class="text-muted w-100 cursor-pointer" onclick="openImageModal(document.getElementById('detail-image').src)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                    </svg>
+                    <div class="small mt-2">No image available</div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Data Table Section -->
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
-                    <h4>Tabel Data</h4>
-                    <div class="d-flex gap-2">
-                        <form method="GET" class="d-flex">
-                            <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary ms-2">Cari</button>
-                        </form>
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
-                            <i class="bi-arrow-clockwise"></i> Refresh
-                        </a>
+    <!-- Data Table Section -->
+    <div>
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+            <h4>Tabel Data</h4>
+            <div class="d-flex gap-2">
+                <form method="GET" class="d-flex">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-primary ms-2">Cari</button>
+                </form>
+                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi-arrow-clockwise"></i> Refresh
+                </a>
             </div>
+        </div>
+    </div>
 
-            <div id="dataTableContainer" class="container">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle">
-                        <thead>
-                            <tr>
-                                @php
+    <div id="dataTableContainer">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        @php
     $sortIcons = [
         'default' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/></svg>',
         'asc' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>',
