@@ -31,27 +31,30 @@
 <div class="mb-4">
     <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;"
                         <div class="row small g-2">
-                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
-                        </div>
-                        <!-- Image Panel -->
-                        <div style="min-width: 300px; max-width: 400px; margin-left: auto;" id="imagePanel">
-                            <div class="bg-white p-3 rounded shadow-sm text-center h-100">
-                                <img id="detail-image" 
-                                    src="" 
-                                    class="img-fluid cursor-pointer h-100" 
-                                    style="cursor: pointer; width: auto; object-fit: contain;" 
-                                    onclick="openImageModal(this.src)" />
+                            <div class="col-9">
+                                <div class="row">
+                                    <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
+                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="bg-white p-3 rounded shadow-sm text-center h-100">
+                                    <img id="detail-image" 
+                                        src="" 
+                                        class="img-fluid cursor-pointer h-100" 
+                                        style="cursor: pointer; width: auto; object-fit: contain;" 
+                                        onclick="openImageModal(this.src)" />
+                                </div>
                             </div>
                         </div>
         </div>
