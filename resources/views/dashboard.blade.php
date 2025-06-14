@@ -10,11 +10,11 @@
     const MAPBOX_TOKEN = "{{ config('services.mapbox.token', env('MAPBOX_TOKEN')) }}";
 </script>
 
-<!-- Main Content (full width) -->
-<div>
+<!-- Main Content (truly full width, with id for sidebar JS) -->
+<div id="mainContent">
     <!-- Map Container - Full Width -->
-    <div class="row mb-4">
-        <div class="col-12">
+    <div class="mb-4">
+        <div>
             <div id="map" class="rounded shadow-sm" style="height: 500px;">
                 <div class="d-flex justify-content-center align-items-center h-100 bg-light">
                     <div class="text-center">
@@ -29,9 +29,9 @@
     </div>
 
     <!-- Detail and Image Panels - Side by Side -->
-    <div class="row mb-4">
+    <div class="mb-4 d-flex flex-wrap gap-3">
         <!-- Detail Panel -->
-        <div class="col-md-8">
+        <div class="flex-grow-1" style="min-width: 300px;">
             <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
                 <div class="row small g-2">
                     <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
@@ -49,9 +49,8 @@
                 </div>
             </div>
         </div>
-        
         <!-- Image Panel -->
-        <div class="col-md-4">
+        <div style="min-width: 300px; max-width: 400px;">
             <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
                 <img id="detail-image" 
                      src="" 
