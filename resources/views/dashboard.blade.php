@@ -50,10 +50,10 @@
                             <div class="col-3">
                                 <div class="bg-white p-3 rounded shadow-sm text-center h-100">
                                     <img id="detail-image" 
-                                        src="" 
-                                        class="img-fluid cursor-pointer h-100" 
-                                        style="cursor: pointer; width: auto; object-fit: contain;" 
-                                        onclick="openImageModal(this.src)" />
+                                         src="" 
+                                         class="img-fluid cursor-pointer" 
+                                         style="cursor: pointer; height: 100%; width: auto; object-fit: contain;" 
+                                         onclick="openImageModal(this.src)" />
                                 </div>
                             </div>
                         </div>
