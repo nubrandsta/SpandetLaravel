@@ -23,7 +23,7 @@
                 <i class="bi bi-list fs-4"></i>
             </button>
             <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
-            <a class="navbar-brand" href="#">{{ Auth::user()->full_name }}</a>
+            <a class="navbar-brand" href="{{ route('dashboard') }}">{{ Auth::user()->full_name }}</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-light">Keluar</button>
