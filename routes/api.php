@@ -27,5 +27,5 @@ Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->
 });
 
 Route::get('/data', [DataController::class, 'index']);
-Route::get('/data/{id}', [DataController::class, 'show']);
 Route::get('/data/coordinates', [DataController::class, 'findByCoordinates']);
+Route::get('/data/{id}', [DataController::class, 'show']);

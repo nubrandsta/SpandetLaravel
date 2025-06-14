@@ -92,9 +92,14 @@ class DataController extends Controller
                 ], 400);
             }
 
+            // Convert coordinates to float for precise comparison
+            $lat = (float) $lat;
+            $long = (float) $long;
+
             // Find the first data point that matches these coordinates
-            $data = Data::where('lat', $lat)
-                       ->where('long', $long)
+            // Using a small tolerance for floating point comparison
+            $data = Data::whereRaw('ABS(lat - ?) < 0.000001', [$lat])
+                       ->whereRaw('ABS(long - ?) < 0.000001', [$long])
                        ->first();
 
             if (!$data) {
@@ -127,6 +132,7 @@ class DataController extends Controller
                 'image_url' => $imageUrl
             ]);
         } catch (\Exception $e) {
+            // \Log::error('Error in findByCoordinates: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to fetch data',
                 'message' => $e->getMessage()
