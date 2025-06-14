@@ -1,37 +1,5 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    tr.user-row {
-        cursor: pointer;
-    }
-    tr.user-row:hover {
-        background-color: #f8f9fa;
-    }
-    #userDetails .card-body {
-        padding: 1.5rem;
-    }
-
-    #userDetails p {
-        margin-bottom: 0.75rem;
-    }
-
-    #userDetails .card-title {
-        margin-bottom: 1.25rem;
-    }
-
-    #userDetails .row {
-        margin-left: -1.5rem;
-        margin-right: -1.5rem;
-    }
-
-    #userDetails .col-md-6 {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-</style>
-@endsection
-
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @if(session('success'))
@@ -44,7 +12,7 @@
 </div>
 @endif
 
-<div class="container mt-4">
+<div class="container">
     <h1>Manajemen Akun</h1>
     
     <div id="userDetails" class="row mb-4" style="display: none;">
@@ -269,6 +237,37 @@
         </div>
     </div>
 </div>
+
+<style>
+    tr.user-row {
+        cursor: pointer;
+    }
+    tr.user-row:hover {
+        background-color: #f8f9fa;
+    }
+    #userDetails .card-body {
+        padding: 1.5rem;
+    }
+
+    #userDetails p {
+        margin-bottom: 0.75rem;
+    }
+
+    #userDetails .card-title {
+        margin-bottom: 1.25rem;
+    }
+
+    #userDetails .row {
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+    }
+
+    #userDetails .col-md-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+</style>
+@endsection
 
 @section('scripts')
 <script>
