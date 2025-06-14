@@ -519,9 +519,10 @@
                                     
                                     // Update detail container with fetched data
                                     detailContainer.innerHTML = `
-                                        <div class="col-12">
-                                            <div class="bg-white p-3 rounded shadow-sm">
-                                                <div class="row small g-2">
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <div class="bg-white p-3 rounded shadow-sm">
+                                                    <div class="row small g-2">
                                                     <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">${data.uploader || '-'}</span></div>
                                                     <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">${data.group || '-'}</span></div>
                                                     <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">${data.spandukCount || '-'}</span></div>
@@ -534,6 +535,16 @@
                                                     <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
                                                     <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
                                                     <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
+                                                </div>
+                                            </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="bg-white p-3 rounded shadow-sm h-100">
+                                                    <div id="image-placeholder" class="d-flex align-items-center justify-content-center h-100">
+                                                        <div class="text-muted">No image available</div>
+                                                    </div>
+                                                    <img id="detail-image" src="" class="w-100" style="height: 100%; width: auto; object-fit: contain; display: none;">
                                                 </div>
                                             </div>
                                         </div>
