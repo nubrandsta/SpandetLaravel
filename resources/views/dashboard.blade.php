@@ -434,15 +434,12 @@
                                 
                                 // Handle image
                                 const imageElement = document.getElementById('detail-image');
-                                const imagePlaceholder = document.getElementById('image-placeholder');
                                 
                                 if (data.image_url) {
                                     imageElement.src = data.image_url;
                                     imageElement.style.display = 'block';
-                                    imagePlaceholder.style.display = 'none';
                                 } else {
                                     imageElement.style.display = 'none';
-                                    imagePlaceholder.style.display = 'block';
                                 }
                                 
                                 // Center map on this location if coordinates are available
