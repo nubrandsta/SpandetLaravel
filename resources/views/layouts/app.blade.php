@@ -126,18 +126,16 @@
             function openSidebar() {
                 sidebar.classList.remove('collapsed');
                 sidebar.classList.add('show');
-                if (sidebarBackdrop) sidebarBackdrop.style.display = 'block';
             }
             function closeSidebar() {
-                sidebar.classList.add('collapsed');
                 sidebar.classList.remove('show');
-                if (sidebarBackdrop) sidebarBackdrop.style.display = 'none';
+                sidebar.classList.add('collapsed');
             }
             function toggleSidebar() {
-                if (sidebar.classList.contains('collapsed')) {
-                    openSidebar();
-                } else {
+                if (sidebar.classList.contains('show')) {
                     closeSidebar();
+                } else {
+                    openSidebar();
                 }
             }
             sidebarToggle.addEventListener('click', function(e) {
