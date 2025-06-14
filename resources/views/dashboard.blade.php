@@ -47,12 +47,12 @@
         </div>
     </div>
     <!-- Image Panel Inside Detail Container -->
-        <div style="min-width: 300px; max-width: 400px; margin-left: auto; display: none;" id="imagePanel">
+        <div style="min-width: 300px; max-width: 400px; margin-left: auto;" id="imagePanel">
             <div class="bg-white p-3 rounded shadow-sm text-center h-100">
                 <img id="detail-image" 
                       src="" 
                       class="img-fluid cursor-pointer h-100" 
-                      style="display: none; cursor: pointer; width: auto; object-fit: contain;" 
+                      style="cursor: pointer; width: auto; object-fit: contain;" 
                      onclick="openImageModal(this.src)" />
                  <div id="image-placeholder" class="text-muted w-100 cursor-pointer" style="display: none;" onclick="openImageModal(document.getElementById('detail-image').src)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
