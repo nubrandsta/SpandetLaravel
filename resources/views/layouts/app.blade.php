@@ -19,7 +19,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container-fluid">
-            <button class="btn btn-link text-white me-3" id="sidebarToggle">
+            <button class="btn btn-link text-white" id="sidebarToggle">
                 <i class="bi bi-list fs-4"></i>
             </button>
             <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
@@ -34,7 +34,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
+            <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100 collapsed" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
                 <div class="list-group mt-3">
                     <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                     <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
@@ -44,7 +44,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 ms-auto" id="mainContent">
+            <div class="col-md-9 col-lg-10 ms-auto expanded" id="mainContent">
                 @yield('content')
             </div>
         </div>
@@ -59,6 +59,7 @@
             left: 0;
             top: 0;
             padding-top: 60px;
+            width: 250px;
         }
 
         #sidebar.collapsed {
@@ -67,6 +68,7 @@
 
         #mainContent {
             transition: margin-left 0.3s;
+            margin-left: 250px;
         }
 
         #mainContent.expanded {
@@ -81,6 +83,25 @@
             #sidebar.show {
                 left: 0;
             }
+
+            #mainContent {
+                margin-left: 0;
+            }
+        }
+
+        /* Navbar styles */
+        .navbar {
+            padding: 0.5rem 1rem;
+        }
+
+        #sidebarToggle {
+            padding: 0.25rem 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        #sidebarToggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
         }
     </style>
 
@@ -104,9 +125,18 @@
                     const isClickInsideSidebar = sidebar.contains(event.target);
                     const isClickOnToggle = sidebarToggle.contains(event.target);
                     
-                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
-                        sidebar.classList.remove('show');
+                    if (!isClickInsideSidebar && !isClickOnToggle && !sidebar.classList.contains('collapsed')) {
+                        sidebar.classList.add('collapsed');
+                        mainContent.classList.add('expanded');
                     }
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.add('expanded');
                 }
             });
         });
