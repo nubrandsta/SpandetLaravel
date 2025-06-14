@@ -98,8 +98,8 @@ class DataController extends Controller
 
             // Find the first data point that matches these coordinates
             // Using a small tolerance for floating point comparison
-            $data = Data::whereRaw('ABS(lat - ?) < 0.000001', [$lat])
-                       ->whereRaw('ABS(long - ?) < 0.000001', [$long])
+            $data = Data::whereRaw('ABS(`lat` - ?) < 0.000001', [$lat])
+                       ->whereRaw('ABS(`long` - ?) < 0.000001', [$long])
                        ->first();
 
             if (!$data) {
