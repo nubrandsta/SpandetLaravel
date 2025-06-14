@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
+@section('styles')
 <style>
     tr.user-row {
         cursor: pointer;
@@ -32,7 +30,10 @@
         padding-right: 1.5rem;
     }
 </style>
+@endsection
 
+@section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ session('success') }}
