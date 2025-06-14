@@ -36,23 +36,16 @@
     </nav>
 
     @auth
-        <!-- Sidebar (overlay) -->
-        <div class="sidebar bg-light position-fixed h-100 collapsed" id="sidebar" style="z-index: 1051; top: 0; left: -250px; width: 250px; transition: all 0.3s ease; padding-top: 60px;">
-            <div class="d-flex align-items-center justify-content-end p-2">
-                <button class="btn btn-link text-primary" id="sidebarCollapseBtn" style="font-size: 1.5rem;">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-            </div>
-            <div class="list-group mt-3">
-                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
-                <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
-                <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
-            </div>
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu" id="navDropdown" style="display: none; position: absolute; left: 10px; top: 60px; z-index: 1050; min-width: 200px;">
+            <a href="{{ route('dashboard') }}" class="dropdown-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('user.management') }}" class="dropdown-item {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
+            <a href="{{ route('group.management') }}" class="dropdown-item {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
+            <a href="{{ route('data.management') }}" class="dropdown-item {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
         </div>
     @endauth
 
-    <!-- Main Content (always full width) -->
+    <!-- Main Content -->
     <div id="mainContent">
         @yield('content')
     </div>
@@ -61,46 +54,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <style>
-        /* Sidebar overlay styles */
-        #sidebar {
-            left: -250px;
-            width: 250px;
-            top: 0;
-            height: 100vh;
-            background: #f8f9fa;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-            z-index: 1051;
-            border-right: 1px solid #e0e0e0;
-        }
-        #sidebar.show {
-            left: 0;
-        }
-        #sidebar.collapsed {
-            left: -250px;
-        }
-        #mainContent {
-            width: 100%;
-            margin-left: 0;
-            transition: none;
-        }
-        /* Overlay effect for sidebar */
-        #sidebar-backdrop {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.2);
-            z-index: 1050;
-        }
-        #sidebar.show ~ #sidebar-backdrop {
-            display: block;
-        }
-        @media (max-width: 768px) {
-            #sidebar {
-                width: 80vw;
-                min-width: 200px;
-                max-width: 300px;
-            }
-        }
         .navbar {
             padding: 0.5rem 1rem;
         }
@@ -115,47 +68,28 @@
     </style>
 
     @auth
-    <div id="sidebar-backdrop"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
-            const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+            const dropdown = document.getElementById('navDropdown');
+            const toggleBtn = document.getElementById('sidebarToggle');
 
-            function openSidebar() {
-                sidebar.classList.remove('collapsed');
-                sidebar.classList.add('show');
-            }
-            function closeSidebar() {
-                sidebar.classList.remove('show');
-                sidebar.classList.add('collapsed');
-            }
-            function toggleSidebar() {
-                if (sidebar.classList.contains('show')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            }
-            sidebarToggle.addEventListener('click', function(e) {
+            toggleBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                toggleSidebar();
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
             });
-            if (sidebarCollapseBtn) {
-                sidebarCollapseBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    closeSidebar();
-                });
-            }
-            if (sidebarBackdrop) {
-                sidebarBackdrop.addEventListener('click', function() {
-                    closeSidebar();
-                });
-            }
-            // Optional: close sidebar on ESC key
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            // Close dropdown on ESC key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeSidebar();
+                if (e.key === 'Escape') {
+                    dropdown.style.display = 'none';
+                }
             });
         });
     </script>
