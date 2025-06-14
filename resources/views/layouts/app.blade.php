@@ -79,11 +79,11 @@
             });
 
             // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!dropdown.contains(e.target) {
-                    dropdown.style.display = 'none';
-                }
-            });
+             document.addEventListener('click', function(e) {
+                 if (!dropdown.contains(e.target) && e.target !== toggleBtn) {
+                     dropdown.style.display = 'none';
+                 }
+             });
 
             // Close dropdown on ESC key
             document.addEventListener('keydown', function(e) {
