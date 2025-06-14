@@ -3,25 +3,6 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<style>
-    tr.group-row {
-        cursor: pointer;
-    }
-    tr.group-row:hover {
-        background-color: #f8f9fa;
-    }
-    #groupDetails .card-body {
-        padding: 1.5rem;
-    }
-
-    #groupDetails p {
-        margin-bottom: 0.75rem;
-    }
-
-    #groupDetails .card-title {
-        margin-bottom: 1.25rem;
-    }
-</style>
 
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -197,6 +178,28 @@
         </div>
     </div>
 </div>
+
+<style>
+    tr.group-row {
+        cursor: pointer;
+    }
+    tr.group-row:hover {
+        background-color: #f8f9fa;
+    }
+    #groupDetails .card-body {
+        padding: 1.5rem;
+    }
+
+    #groupDetails p {
+        margin-bottom: 0.75rem;
+    }
+
+    #groupDetails .card-title {
+        margin-bottom: 1.25rem;
+    }
+</style>
+
+@endsection
 
 @section('scripts')
 <script>
