@@ -70,7 +70,7 @@
             background: #f8f9fa;
             box-shadow: 2px 0 8px rgba(0,0,0,0.05);
         }
-        #sidebar:not(.collapsed) {
+        #sidebar.show {
             left: 0;
         }
         #sidebar.collapsed {
