@@ -524,17 +524,17 @@
                                                 <div class="bg-white p-3 rounded shadow-sm">
                                                     <div class="row small g-2">
                                                     <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">' + (data.uploader || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">' + (data.group || '-') + '</span></div>
-                                                     <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">' + (data.spandukCount || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">' + (data.createdAt || '-') + '</span></div>
-                                                     <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">' + (data.lat || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">' + (data.long || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">' + (data.thoroughfare || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">' + (data.subLocality || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">' + (data.locality || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">' + (data.subAdmin || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">' + (data.adminArea || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">' + (data.postalCode || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">${data.group || '-'}</span></div>
+                                                     <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">${data.spandukCount || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">${data.createdAt || '-'}</span></div>
+                                                     <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">${data.lat || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">${data.long || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">${data.thoroughfare || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">${data.subLocality || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">${data.locality || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
                                                 </div>
                                             </div>
                                                 </div>
