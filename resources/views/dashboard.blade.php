@@ -44,6 +44,16 @@
                             <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
                         </div>
+                        <!-- Image Panel -->
+                        <div style="min-width: 300px; max-width: 400px; margin-left: auto;" id="imagePanel">
+                            <div class="bg-white p-3 rounded shadow-sm text-center h-100">
+                                <img id="detail-image" 
+                                    src="" 
+                                    class="img-fluid cursor-pointer h-100" 
+                                    style="cursor: pointer; width: auto; object-fit: contain;" 
+                                    onclick="openImageModal(this.src)" />
+                            </div>
+                        </div>
         </div>
     </div>
     <!-- Image Panel Inside Detail Container -->
