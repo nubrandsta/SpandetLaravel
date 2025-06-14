@@ -52,7 +52,7 @@
                                     <img id="detail-image" 
                                          src="" 
                                          class="img-fluid cursor-pointer object-fit-contain"
-                                         style="cursor: pointer; max-height: 100px; width: auto; object-fit: contain;" 
+                                         style="cursor: pointer;" 
                                          onclick="openImageModal(this.src)" />
                                 </div>
                             </div>
@@ -221,10 +221,11 @@
     }
     
     #detail-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        flex-shrink: 1;
+        max-height: 100px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
     }
     
     #image-placeholder {
@@ -526,7 +527,7 @@
                                                     <img id="detail-image" 
                                                         src="" 
                                                         class="img-fluid cursor-pointer object-fit-contain"
-                                                        style="cursor: pointer; max-height: 100px; width: auto; object-fit: contain;" 
+                                                        style="cursor: pointer;"  
                                                         onclick="openImageModal(this.src)" />
                                                 </div>
                                             </div>
