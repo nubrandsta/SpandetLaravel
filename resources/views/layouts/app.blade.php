@@ -35,86 +35,77 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            @auth
-                <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100 collapsed" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
-                    <div class="d-flex align-items-center justify-content-end p-2">
-                        <button class="btn btn-link text-primary d-block d-md-none" id="sidebarCollapseBtn" style="font-size: 1.5rem;">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                    </div>
-                    <div class="list-group mt-3">
-                        <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                        <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
-                        <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
-                        <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
-                    </div>
-                </div>
-
-                <!-- Main Content -->
-                <div class="col-md-9 col-lg-10 ms-auto expanded" id="mainContent">
-                    @yield('content')
-                </div>
-            @else
-                <!-- Main Content (Full Width for Non-Authenticated Users) -->
-                <div class="col-12">
-                    @yield('content')
-                </div>
-            @endauth
+    @auth
+        <!-- Sidebar (overlay) -->
+        <div class="sidebar bg-light position-fixed h-100 collapsed" id="sidebar" style="z-index: 1050; top: 0; left: -250px; width: 250px; transition: left 0.3s; padding-top: 60px;">
+            <div class="d-flex align-items-center justify-content-end p-2">
+                <button class="btn btn-link text-primary" id="sidebarCollapseBtn" style="font-size: 1.5rem;">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            </div>
+            <div class="list-group mt-3">
+                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
+                <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
+                <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
+            </div>
         </div>
+    @endauth
+
+    <!-- Main Content (always full width) -->
+    <div id="mainContent">
+        @yield('content')
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <style>
-        /* Sidebar styles */
+        /* Sidebar overlay styles */
         #sidebar {
-            left: 0;
-            top: 0;
-            padding-top: 60px;
+            left: -250px;
             width: 250px;
+            top: 0;
+            height: 100vh;
+            background: #f8f9fa;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
         }
-
+        #sidebar:not(.collapsed) {
+            left: 0;
+        }
         #sidebar.collapsed {
             left: -250px;
         }
-
         #mainContent {
-            transition: margin-left 0.3s;
-            margin-left: 250px;
-        }
-
-        #mainContent.expanded {
+            width: 100%;
             margin-left: 0;
+            transition: none;
         }
-
+        /* Overlay effect for sidebar */
+        #sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.2);
+            z-index: 1049;
+        }
+        #sidebar.show ~ #sidebar-backdrop {
+            display: block;
+        }
         @media (max-width: 768px) {
             #sidebar {
-                left: -250px;
-            }
-            
-            #sidebar.show {
-                left: 0;
-            }
-
-            #mainContent {
-                margin-left: 0;
+                width: 80vw;
+                min-width: 200px;
+                max-width: 300px;
             }
         }
-
-        /* Navbar styles */
         .navbar {
             padding: 0.5rem 1rem;
         }
-
         #sidebarToggle {
             padding: 0.25rem 0.5rem;
             margin-right: 0.5rem;
         }
-
         #sidebarToggle:hover {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
@@ -122,43 +113,49 @@
     </style>
 
     @auth
+    <div id="sidebar-backdrop"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar toggle functionality
             const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
-            
-            function toggleSidebar() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-            }
-            
-            sidebarToggle.addEventListener('click', toggleSidebar);
-            if (sidebarCollapseBtn) {
-                sidebarCollapseBtn.addEventListener('click', toggleSidebar);
-            }
-            
-            // Close sidebar on mobile when clicking outside
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768) {
-                    const isClickInsideSidebar = sidebar.contains(event.target);
-                    const isClickOnToggle = sidebarToggle.contains(event.target);
-                    
-                    if (!isClickInsideSidebar && !isClickOnToggle && !sidebar.classList.contains('collapsed')) {
-                        sidebar.classList.add('collapsed');
-                        mainContent.classList.add('expanded');
-                    }
-                }
-            });
+            const sidebarBackdrop = document.getElementById('sidebar-backdrop');
 
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.add('collapsed');
-                    mainContent.classList.add('expanded');
+            function openSidebar() {
+                sidebar.classList.remove('collapsed');
+                sidebar.classList.add('show');
+                if (sidebarBackdrop) sidebarBackdrop.style.display = 'block';
+            }
+            function closeSidebar() {
+                sidebar.classList.add('collapsed');
+                sidebar.classList.remove('show');
+                if (sidebarBackdrop) sidebarBackdrop.style.display = 'none';
+            }
+            function toggleSidebar() {
+                if (sidebar.classList.contains('collapsed')) {
+                    openSidebar();
+                } else {
+                    closeSidebar();
                 }
+            }
+            sidebarToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSidebar();
+            });
+            if (sidebarCollapseBtn) {
+                sidebarCollapseBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            if (sidebarBackdrop) {
+                sidebarBackdrop.addEventListener('click', function() {
+                    closeSidebar();
+                });
+            }
+            // Optional: close sidebar on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeSidebar();
             });
         });
     </script>
