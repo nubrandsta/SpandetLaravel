@@ -37,7 +37,7 @@
 
     @auth
         <!-- Sidebar (overlay) -->
-        <div class="sidebar bg-light position-fixed h-100 collapsed" id="sidebar" style="z-index: 1050; top: 0; left: -250px; width: 250px; transition: left 0.3s; padding-top: 60px;">
+        <div class="sidebar bg-light position-fixed h-100 collapsed" id="sidebar" style="z-index: 1100; top: 0; left: -250px; width: 250px; transition: left 0.3s; padding-top: 60px;">
             <div class="d-flex align-items-center justify-content-end p-2">
                 <button class="btn btn-link text-primary" id="sidebarCollapseBtn" style="font-size: 1.5rem;">
                     <i class="bi bi-chevron-left"></i>
@@ -68,7 +68,9 @@
             top: 0;
             height: 100vh;
             background: #f8f9fa;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+            z-index: 1100;
+            border-right: 1px solid #e0e0e0;
         }
         #sidebar.show {
             left: 0;
@@ -87,7 +89,7 @@
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.2);
-            z-index: 1049;
+            z-index: 1050;
         }
         #sidebar.show ~ #sidebar-backdrop {
             display: block;
