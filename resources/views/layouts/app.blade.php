@@ -19,34 +19,45 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container-fluid">
-            <button class="btn btn-link text-white" id="sidebarToggle">
-                <i class="bi bi-list fs-4"></i>
-            </button>
+            @auth
+                <button class="btn btn-link text-white" id="sidebarToggle">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            @endauth
             <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
-            <a class="navbar-brand" href="{{ route('dashboard') }}">{{ Auth::user()->full_name }}</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-light">Keluar</button>
-            </form>
+            @auth
+                <a class="navbar-brand" href="{{ route('dashboard') }}">{{ Auth::user()->full_name }}</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-light">Keluar</button>
+                </form>
+            @endauth
         </div>
     </nav>
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100 collapsed" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
-                <div class="list-group mt-3">
-                    <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                    <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
-                    <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
-                    <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
+            @auth
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100 collapsed" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
+                    <div class="list-group mt-3">
+                        <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                        <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
+                        <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
+                        <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 ms-auto expanded" id="mainContent">
-                @yield('content')
-            </div>
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 ms-auto expanded" id="mainContent">
+                    @yield('content')
+                </div>
+            @else
+                <!-- Main Content (Full Width for Non-Authenticated Users) -->
+                <div class="col-12">
+                    @yield('content')
+                </div>
+            @endauth
         </div>
     </div>
 
@@ -105,6 +116,7 @@
         }
     </style>
 
+    @auth
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Sidebar toggle functionality
@@ -141,6 +153,7 @@
             });
         });
     </script>
+    @endauth
 
     @yield('scripts')
 </body>
