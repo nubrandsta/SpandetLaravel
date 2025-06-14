@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container-fluid px-4 py-3">
 
 <!-- Mapbox CSS -->
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
@@ -216,6 +217,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <style>
