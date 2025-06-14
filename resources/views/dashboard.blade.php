@@ -519,32 +519,35 @@
                                     
                                     // Update detail container with fetched data
                                     detailContainer.innerHTML = `
-                                        <div class="row">
+                                        <div class="row small g-2">
                                             <div class="col-9">
-                                                <div class="bg-white p-3 rounded shadow-sm">
-                                                    <div class="row small g-2">
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">' + (data.uploader || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">${data.group || '-'}</span></div>
-                                                     <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">${data.spandukCount || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">${data.createdAt || '-'}</span></div>
-                                                     <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">${data.lat || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">${data.long || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">${data.thoroughfare || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">${data.subLocality || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">${data.locality || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
-                                                </div>
-                                            </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="bg-white p-3 rounded shadow-sm h-100">
-                                                    <div id="image-placeholder" class="d-flex align-items-center justify-content-center h-100">
-                                                        <div class="text-muted">No image available</div>
+                                                <div class="row">
+                                                    <div class="bg-white p-3 rounded shadow-sm">
+                                                        <div class="row small g-2">
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">${data.uploader || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">${data.group || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">${data.spandukCount || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">${data.createdAt || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">${data.lat || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">${data.long || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">${data.thoroughfare || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">${data.subLocality || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">${data.locality || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
+                                                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
+                                                        </div>
                                                     </div>
-                                                    <img id="detail-image" src="" class="w-100" style="height: 100%; width: auto; object-fit: contain; display: none;">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-3">
+                                                <div class="bg-white p-3 rounded shadow-sm text-center h-100">
+                                                    <img id="detail-image" 
+                                                        src="" 
+                                                        class="img-fluid cursor-pointer" 
+                                                        style="cursor: pointer; height: 100%; width: auto; object-fit: contain;" 
+                                                        onclick="openImageModal(this.src)" />
                                                 </div>
                                             </div>
                                         </div>
@@ -552,26 +555,19 @@
                                     
                                     // Handle image with proper loading states
                                     const imageElement = document.getElementById('detail-image');
-                                    const imagePlaceholder = document.getElementById('image-placeholder');
                                     
                                     imageElement.style.display = 'none';
-                                    imagePlaceholder.style.display = 'block';
-                                    imagePlaceholder.innerHTML = '<div class="text-muted">No image available</div>';
                                     
                                     if (data.image_url) {
-                                        imagePlaceholder.innerHTML = '<div class="spinner-border" role="status"></div>';
                                         
                                         // Preload image
                                         const img = new Image();
                                         img.onload = function() {
                                             imageElement.src = data.image_url;
                                             imageElement.style.display = 'block';
-                                            imagePlaceholder.style.display = 'none';
                                         };
                                         img.onerror = function() {
                                             imageElement.style.display = 'none';
-                                            imagePlaceholder.style.display = 'block';
-                                            imagePlaceholder.innerHTML = '<div class="text-muted">Failed to load image</div>';
                                         };
                                         img.src = data.image_url;
                                     }
