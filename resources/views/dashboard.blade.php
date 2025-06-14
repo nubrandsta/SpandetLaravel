@@ -528,13 +528,13 @@
                                                      <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">' + (data.spandukCount || '-') + '</span></div>
                                                     <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">' + (data.createdAt || '-') + '</span></div>
                                                      <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">' + (data.lat || '-') + '</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">${data.long || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">${data.thoroughfare || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">${data.subLocality || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">${data.locality || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
-                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">' + (data.long || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">' + (data.thoroughfare || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">' + (data.subLocality || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">' + (data.locality || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">' + (data.subAdmin || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">' + (data.adminArea || '-') + '</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">' + (data.postalCode || '-') + '</span></div>
                                                 </div>
                                             </div>
                                                 </div>
@@ -554,11 +554,13 @@
                                     const imageElement = document.getElementById('detail-image');
                                     const imagePlaceholder = document.getElementById('image-placeholder');
                                     
-                                    if (data.image_url) {
-                                        imageElement.style.display = 'none';
-                                        imagePlaceholder.style.display = 'block';
-                                        imagePlaceholder.innerHTML = '<div class="spinner-border" role="status"></div>';
+                                    imageElement.style.display = 'none';
+                                    imagePlaceholder.style.display = 'block';
+                                    imagePlaceholder.innerHTML = '<div class="text-muted">No image available</div>';
                                     
+                                    if (data.image_url) {
+                                        imagePlaceholder.innerHTML = '<div class="spinner-border" role="status"></div>';
+                                        
                                         // Preload image
                                         const img = new Image();
                                         img.onload = function() {
@@ -572,9 +574,6 @@
                                             imagePlaceholder.innerHTML = '<div class="text-muted">Failed to load image</div>';
                                         };
                                         img.src = data.image_url;
-                                    } else {
-                                        imageElement.style.display = 'none';
-                                        imagePlaceholder.style.display = 'block';
                                     }
                                     
                                     // Center map
