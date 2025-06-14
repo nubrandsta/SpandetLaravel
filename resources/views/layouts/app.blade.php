@@ -9,16 +9,108 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    @yield('head')
+    @yield('styles')
 </head>
 <body>
-    @yield('content')
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container-fluid">
+            <button class="btn btn-link text-white me-3" id="sidebarToggle">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
+            <a class="navbar-brand" href="#">{{ Auth::user()->full_name }}</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-light">Keluar</button>
+            </form>
+        </div>
+    </nav>
 
-    <!-- Bootstrap 5 Bundle JS (includes Popper) -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
+                <div class="list-group mt-3">
+                    <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                    <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
+                    <a href="{{ route('group.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
+                    <a href="{{ route('data.management') }}" class="list-group-item list-group-item-action {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-auto" id="mainContent">
+                @yield('content')
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        /* Sidebar styles */
+        #sidebar {
+            left: 0;
+            top: 0;
+            padding-top: 60px;
+        }
+
+        #sidebar.collapsed {
+            left: -250px;
+        }
+
+        #mainContent {
+            transition: margin-left 0.3s;
+        }
+
+        #mainContent.expanded {
+            margin-left: 0;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                left: -250px;
+            }
+            
+            #sidebar.show {
+                left: 0;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle functionality
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
+            
+            sidebarToggle.addEventListener('click', toggleSidebar);
+            
+            // Close sidebar on mobile when clicking outside
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    const isClickInsideSidebar = sidebar.contains(event.target);
+                    const isClickOnToggle = sidebarToggle.contains(event.target);
+                    
+                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+                    }
+                }
+            });
+        });
+    </script>
 
     @yield('scripts')
 </body>

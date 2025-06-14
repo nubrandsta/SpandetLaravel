@@ -11,7 +11,10 @@
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
+    <div class="container-fluid">
+        <button class="btn btn-link text-white me-3" id="sidebarToggle">
+            <i class="bi bi-list fs-4"></i>
+        </button>
         <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
         <a class="navbar-brand" href="#">{{ Auth::user()->full_name }}</a>
         <form method="POST" action="{{ route('logout') }}">
@@ -24,7 +27,7 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 bg-light sidebar">
+        <div class="col-md-3 col-lg-2 bg-light sidebar position-fixed h-100" id="sidebar" style="z-index: 1000; transition: all 0.3s;">
             <div class="list-group mt-3">
                 <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
                 <a href="{{ route('user.management') }}" class="list-group-item list-group-item-action">Manajemen Akun</a>
@@ -34,13 +37,11 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 ps-md-4">
-            
-            <!-- Map and Image Container -->
-            <div class="row mb-4 container mx-auto">
-                <!-- Mapbox Map Container - Takes 3/4 width -->
-                <div class="col-md-9">
-                    <div id="map" class="rounded shadow-sm" style="height: 400px;">
+        <div class="col-md-9 col-lg-10 ms-auto" id="mainContent">
+            <!-- Map Container - Full Width -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div id="map" class="rounded shadow-sm" style="height: 500px;">
                         <div class="d-flex justify-content-center align-items-center h-100 bg-light">
                             <div class="text-center">
                                 <div class="spinner-border text-primary mb-3" role="status">
@@ -51,9 +52,32 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Detail and Image Panels - Side by Side -->
+            <div class="row mb-4">
+                <!-- Detail Panel -->
+                <div class="col-md-8">
+                    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
+                        <div class="row small g-2">
+                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
+                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
+                        </div>
+                    </div>
+                </div>
                 
-                <!-- Image Panel - Takes 1/4 width -->
-                <div class="col-md-3">
+                <!-- Image Panel -->
+                <div class="col-md-4">
                     <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
                         <img id="detail-image" 
                              src="" 
@@ -72,52 +96,30 @@
                 </div>
             </div>
 
-            <!-- Detail Panel - Full Width -->
-            <div id="detailContainer" class="row mb-4 container mx-auto" style="display: none;">
-                <div class="col-12">
-                    <div class="bg-white p-3 rounded shadow-sm">
-                        <div class="row small g-2">
-                            <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
-                            <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
-                        </div>
+            <!-- Data Table Section -->
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
+                    <h4>Tabel Data</h4>
+                    <div class="d-flex gap-2">
+                        <form method="GET" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary ms-2">Cari</button>
+                        </form>
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi-arrow-clockwise"></i> Refresh
+                        </a>
                     </div>
                 </div>
             </div>
-</div>
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
-        <h4>Tabel Data</h4>
-        <div class="d-flex gap-2">
-            <form method="GET" class="d-flex">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
-                </div>
-                <button type="submit" class="btn btn-primary ms-2">Cari</button>
-            </form>
-            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
-                <i class="bi-arrow-clockwise"></i> Refresh
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="dataTableContainer" class="container">
-    <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-                <thead>
-                    <tr>
-                        @php
+            <div id="dataTableContainer" class="container">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                @php
     $sortIcons = [
         'default' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/></svg>',
         'asc' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/></svg>',
@@ -216,29 +218,30 @@
         </a>
     </div>
 </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data as $item)
-                    <tr>
-                        <td data-id="{{ $item->id }}">{{ $item->created_at->format('d M Y H:i:s') }}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $item)
+                            <tr>
+                                <td data-id="{{ $item->id }}">{{ $item->created_at->format('d M Y H:i:s') }}</td>
 <td>{{ $item->uploader }}</td>
-                        <td>{{ $item->group }}</td>
-                        <td>{{ $item->spandukCount }}</td>
-                        <td>{{ $item->thoroughfare }}</td>
-                        <td>{{ $item->subLocality }}</td>
-                        <td>{{ $item->locality }}</td>
-                        <td>{{ $item->subAdmin }}</td>
-                        <td>{{ $item->adminArea }}</td>
-                        <td>{{ $item->postalCode }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-</div>
+                                <td>{{ $item->group }}</td>
+                                <td>{{ $item->spandukCount }}</td>
+                                <td>{{ $item->thoroughfare }}</td>
+                                <td>{{ $item->subLocality }}</td>
+                                <td>{{ $item->locality }}</td>
+                                <td>{{ $item->subAdmin }}</td>
+                                <td>{{ $item->adminArea }}</td>
+                                <td>{{ $item->postalCode }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="d-flex justify-content-end">
-                {{ $data->links('vendor.pagination.simple-bootstrap-5') }}
+                <div class="d-flex justify-content-end">
+                    {{ $data->links('vendor.pagination.simple-bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>
@@ -250,28 +253,22 @@
         line-height: 1.3;
         word-break: break-word;
     }
-    #detailContainer .row {
-        align-items: stretch;
-    }
+    
     #detail-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         flex-shrink: 1;
     }
+    
     #image-placeholder {
         min-height: 200px;
     }
     
-    #detailContainer .col-md-4 > div {
-        width: 300px;
-        height: 300px;
-        min-width: 300px;
-        min-height: 300px;
-    }
     tr {
         cursor: pointer;
     }
+    
     tr:hover {
         background-color: #f8f9fa;
     }
@@ -280,15 +277,47 @@
     .mapboxgl-popup {
         max-width: 300px;
     }
+    
     .mapboxgl-popup-content {
         padding: 15px;
     }
+    
     .map-popup-content h5 {
         margin-top: 0;
         margin-bottom: 8px;
     }
+    
     .map-popup-content p {
         margin-bottom: 5px;
+    }
+
+    /* Sidebar styles */
+    #sidebar {
+        left: 0;
+        top: 0;
+        padding-top: 60px;
+    }
+
+    #sidebar.collapsed {
+        left: -250px;
+    }
+
+    #mainContent {
+        transition: margin-left 0.3s;
+    }
+
+    #mainContent.expanded {
+        margin-left: 0;
+    }
+
+    @media (max-width: 768px) {
+        #sidebar {
+            left: -250px;
+        }
+        
+        #sidebar.show {
+            left: 0;
+        }
     }
 </style>
 
@@ -298,6 +327,30 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+        
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnToggle = sidebarToggle.contains(event.target);
+                
+                if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
         // Initialize Mapbox map
         mapboxgl.accessToken = MAPBOX_TOKEN; // Using token from the variable we defined
         
