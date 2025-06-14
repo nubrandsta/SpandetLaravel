@@ -55,7 +55,12 @@
                 <!-- Image Panel - Takes 1/4 width -->
                 <div class="col-md-3">
                     <div class="bg-white p-3 rounded shadow-sm text-center h-100 d-flex align-items-center justify-content-center">
-                        <img id="detail-image" src="" class="img-fluid cursor-pointer" style="display: none; cursor: pointer;" onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" onclick="openImageModal(this.src)" />
+                        <img id="detail-image" 
+                             src="" 
+                             class="img-fluid cursor-pointer" 
+                             style="display: none; cursor: pointer;" 
+                             onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block';document.getElementById('image-placeholder').innerHTML='<div class=\'text-muted\'>Failed to load image</div>'" 
+                             onclick="openImageModal(this.src)" />
                         <div id="image-placeholder" class="text-muted w-100 cursor-pointer" onclick="openImageModal(document.getElementById('detail-image').src)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -446,14 +451,85 @@
                             
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
-                                // Find the corresponding row in the table
-                                const row = document.querySelector(`tbody tr td[data-id="${point.id}"]`)?.parentElement;
-                                if (row) {
-                                    // Simulate a click on the row
-                                    row.click();
+                                try {
+                                    // Show loading state
+                                    const detailContainer = document.getElementById('detailContainer');
+                                    detailContainer.style.display = 'flex';
+                                    detailContainer.innerHTML = '<div class="text-center w-100"><div class="spinner-border" role="status"></div></div>';
                                     
-                                    // Ensure map is scrolled into view
+                                    // Fetch data using coordinates
+                                    const response = await fetch(`/api/data/coordinates?lat=${point.lat}&long=${point.long}`);
+                                    if (!response.ok) {
+                                        throw new Error(`Error: ${response.statusText}`);
+                                    }
+                                    
+                                    const data = await response.json();
+                                    
+                                    // Update detail container with fetched data
+                                    detailContainer.innerHTML = `
+                                        <div class="col-12">
+                                            <div class="bg-white p-3 rounded shadow-sm">
+                                                <div class="row small g-2">
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">${data.uploader || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">${data.group || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">${data.spandukCount || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">${data.createdAt || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">${data.lat || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">${data.long || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">${data.thoroughfare || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">${data.subLocality || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">${data.locality || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">${data.subAdmin || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">${data.adminArea || '-'}</span></div>
+                                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">${data.postalCode || '-'}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                    
+                                    // Handle image with proper loading states
+                                    const imageElement = document.getElementById('detail-image');
+                                    const imagePlaceholder = document.getElementById('image-placeholder');
+                                    
+                                    if (data.image_url) {
+                                        imageElement.style.display = 'none';
+                                        imagePlaceholder.style.display = 'block';
+                                        imagePlaceholder.innerHTML = '<div class="spinner-border" role="status"></div>';
+                                        
+                                        // Preload image
+                                        const img = new Image();
+                                        img.onload = function() {
+                                            imageElement.src = data.image_url;
+                                            imageElement.style.display = 'block';
+                                            imagePlaceholder.style.display = 'none';
+                                        };
+                                        img.onerror = function() {
+                                            imageElement.style.display = 'none';
+                                            imagePlaceholder.style.display = 'block';
+                                            imagePlaceholder.innerHTML = '<div class="text-muted">Failed to load image</div>';
+                                        };
+                                        img.src = data.image_url;
+                                    } else {
+                                        imageElement.style.display = 'none';
+                                        imagePlaceholder.style.display = 'block';
+                                    }
+                                    
+                                    // Center map
+                                    if (data.lat && data.long) {
+                                        map.flyTo({
+                                            center: [data.long, data.lat],
+                                            zoom: 15,
+                                            essential: true
+                                        });
+                                    }
+                                    
+                                    // Scroll to map container
                                     document.querySelector('#map').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    
+                                } catch (error) {
+                                    console.error('Error fetching data details:', error);
+                                    const detailContainer = document.getElementById('detailContainer');
+                                    detailContainer.innerHTML = '<div class="alert alert-danger">Failed to load data details. Please try again.</div>';
                                 }
                             });
                         }
