@@ -28,10 +28,10 @@
             </div>
 
 <!-- Detail and Image Panels - Side by Side -->
-<div class="mb-4 d-flex flex-nowrap gap-3">
+<div class="mb-4 d-flex flex-row gap-3">
     <!-- Detail Panel -->
     <div class="flex-grow-1" style="min-width: 300px;">
-        <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;">
+        <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;"
                         <div class="row small g-2">
                             <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
@@ -49,7 +49,7 @@
         </div>
     </div>
     <!-- Image Panel -->
-    <div style="min-width: 300px; max-width: 400px; flex: 0 0 auto; display: none;" id="imagePanel">
+    <div style="min-width: 300px; max-width: 400px; flex: 0 0 auto;" id="imagePanel">
         <div class="bg-white p-3 rounded shadow-sm text-center h-100">
             <img id="detail-image" 
                   src="" 
