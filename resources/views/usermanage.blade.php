@@ -43,87 +43,85 @@
 </div>
 @endif
 
-<div>
-    <div class="container">
-        <h1>Manajemen Akun</h1>
+<div class="container mt-4">
+    <h1>Manajemen Akun</h1>
     
-        <div id="userDetails" class="row mb-4" style="display: none;">
-            <div class="card" style="width: 100%;">
-                <div class="card-body">
-                    <h5 class="card-title">Detail Pengguna</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <p><strong>User ID:</strong> <span id="detailId"></span></p>
-                            <p><strong>Username:</strong> <span id="detailUsername"></span></p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <p><strong>Nama Lengkap:</strong> <span id="detailName"></span></p>
-                            <p><strong>Grup:</strong> <span id="detailGroup"></span></p>
-                        </div>
+    <div id="userDetails" class="row mb-4" style="display: none;">
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <h5 class="card-title">Detail Pengguna</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p><strong>User ID:</strong> <span id="detailId"></span></p>
+                        <p><strong>Username:</strong> <span id="detailUsername"></span></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p><strong>Nama Lengkap:</strong> <span id="detailName"></span></p>
+                        <p><strong>Grup:</strong> <span id="detailGroup"></span></p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Daftar Akun</h5>
-                        <form class="form-inline" method="GET">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary ms-2">Cari
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                    <a href="{{ route('user.management') }}" class="btn btn-outline-secondary">
-                                        <i class="bi-arrow-clockwise"></i> Refresh
-                                    </a>
-                                </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Daftar Akun</h5>
+                    <form class="form-inline" method="GET">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary ms-2">Cari
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <a href="{{ route('user.management') }}" class="btn btn-outline-secondary">
+                                    <i class="bi-arrow-clockwise"></i> Refresh
+                                </a>
                             </div>
-                        </form>
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        @foreach(['Username' => 'username', 'Full Name' => 'full_name', 'Group' => 'group', 'Creation' => 'created_at'] as $label => $column)
-                                            <th>{{ $label }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $user)
-                                        <tr class="user-row" data-user-id="{{ $user->id }}">
-                                            <td>{{ $user->username }}</td>
-                                            <td>{{ $user->full_name }}</td>
-                                            <td>{{ $user->group }}</td>
-                                            <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
                         </div>
-                        {{ $users->links() }}
+                    </form>
+                </div>
+                
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    @foreach(['Username' => 'username', 'Full Name' => 'full_name', 'Group' => 'group', 'Creation' => 'created_at'] as $label => $column)
+                                        <th>{{ $label }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($users as $user)
+                                    <tr class="user-row" data-user-id="{{ $user->id }}">
+                                        <td>{{ $user->username }}</td>
+                                        <td>{{ $user->full_name }}</td>
+                                        <td>{{ $user->group }}</td>
+                                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    {{ $users->links() }}
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Manajemen Akun</h5>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <button class="btn btn-primary mb-3" id="createUserBtn">Tambah Pengguna</button>
-                        <button class="btn btn-primary mb-3" id="editNameBtn">Ubah Nama Lengkap</button>
-                        <button class="btn btn-primary mb-3" id="editGroupBtn">Ubah Grup</button>
-                        <button class="btn btn-warning mb-3" id="resetPasswordBtn">Reset Kata Sandi</button>
-                        <button class="btn btn-danger mb-3" id="deleteUserBtn">Hapus Pengguna</button>
-                    </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Manajemen Akun</h5>
+                </div>
+                <div class="d-flex flex-column">
+                    <button class="btn btn-primary mb-3" id="createUserBtn">Tambah Pengguna</button>
+                    <button class="btn btn-primary mb-3" id="editNameBtn">Ubah Nama Lengkap</button>
+                    <button class="btn btn-primary mb-3" id="editGroupBtn">Ubah Grup</button>
+                    <button class="btn btn-warning mb-3" id="resetPasswordBtn">Reset Kata Sandi</button>
+                    <button class="btn btn-danger mb-3" id="deleteUserBtn">Hapus Pengguna</button>
                 </div>
             </div>
         </div>
