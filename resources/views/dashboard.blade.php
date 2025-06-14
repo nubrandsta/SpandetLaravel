@@ -27,11 +27,9 @@
                 </div>
             </div>
 
-<!-- Detail and Image Panels - Side by Side -->
-<div class="mb-4 d-flex flex-row gap-3">
-    <!-- Detail Panel -->
-    <div class="flex-grow-1" style="min-width: 300px;">
-        <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;"
+<!-- Detail Container with Image Panel Inside -->
+<div class="mb-4">
+    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;"
                         <div class="row small g-2">
                             <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
                             <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
@@ -48,15 +46,14 @@
                         </div>
         </div>
     </div>
-    <!-- Image Panel -->
-    <div style="min-width: 300px; max-width: 400px; flex: 0 0 auto;" id="imagePanel">
-        <div class="bg-white p-3 rounded shadow-sm text-center h-100">
-            <img id="detail-image" 
-                  src="" 
-                  class="img-fluid cursor-pointer" 
-                  style="display: none; cursor: pointer; max-height: 100%; max-width: 100%; object-fit: contain;" 
-                 onerror="this.style.display='none';document.getElementById('image-placeholder').style.display='block'" 
-                 onclick="openImageModal(this.src)" />
+    <!-- Image Panel Inside Detail Container -->
+        <div style="min-width: 300px; max-width: 400px; margin-left: auto; display: none;" id="imagePanel">
+            <div class="bg-white p-3 rounded shadow-sm text-center h-100">
+                <img id="detail-image" 
+                      src="" 
+                      class="img-fluid cursor-pointer h-100" 
+                      style="display: none; cursor: pointer; width: auto; object-fit: contain;" 
+                     onclick="openImageModal(this.src)" />
                  <div id="image-placeholder" class="text-muted w-100 cursor-pointer" style="display: none;" onclick="openImageModal(document.getElementById('detail-image').src)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
