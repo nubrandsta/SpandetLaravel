@@ -220,16 +220,10 @@
     flex-direction: column;
 }
 
-.detail-card .card-body {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .detail-thumb {
     width: 100%;
-    height: 100px;
+    height: 100px !important;
+    max-height: 100px !important;
     object-fit: cover;
     cursor: pointer;
     border: 1px solid #dee2e6;
@@ -237,6 +231,14 @@
     padding: 0.25rem;
     background-color: #fff;
     transition: all 0.2s ease-in-out;
+}
+
+.detail-card .card-body {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
 }
 
 .detail-thumb:hover {
