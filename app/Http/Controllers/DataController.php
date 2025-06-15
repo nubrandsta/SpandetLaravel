@@ -96,43 +96,44 @@ class DataController extends Controller
             $lat = (float) $lat;
             $long = (float) $long;
 
-            // Find the first data point that matches these coordinates
+            // Find all data points that match these coordinates
             // Using a small tolerance for floating point comparison
             $data = Data::whereRaw('ABS(`lat` - ?) < 0.000001', [$lat])
                        ->whereRaw('ABS(`long` - ?) < 0.000001', [$long])
-                       ->first();
+                       ->get();
 
-            if (!$data) {
+            if ($data->isEmpty()) {
                 return response()->json([
                     'error' => 'No data found',
                     'message' => 'No data found for the given coordinates'
                 ], 404);
             }
 
-            // Format image URL
-            $imageUrl = $data->imgURI;
-            if (!empty($imageUrl) && !str_starts_with($imageUrl, 'http')) {
-                $imageUrl = 'https://spandet.my.id/' . ltrim($imageUrl, '/');
-            }
+            return response()->json($data->map(function($item) {
+                // Format image URL
+                $imageUrl = $item->imgURI;
+                if (!empty($imageUrl) && !str_starts_with($imageUrl, 'http')) {
+                    $imageUrl = 'https://spandet.my.id/' . ltrim($imageUrl, '/');
+                }
 
-            return response()->json([
-                'id' => $data->id,
-                'uploader' => $data->uploader,
-                'group' => $data->group,
-                'lat' => $data->lat,
-                'long' => $data->long,
-                'thoroughfare' => $data->thoroughfare,
-                'subLocality' => $data->subLocality,
-                'locality' => $data->locality,
-                'subAdmin' => $data->subAdmin,
-                'adminArea' => $data->adminArea,
-                'postalCode' => $data->postalCode,
-                'createdAt' => $data->created_at->format('d M Y H:i:s'),
-                'spandukCount' => $data->spandukCount,
-                'image_url' => $imageUrl
-            ]);
+                return [
+                    'id' => $item->id,
+                    'uploader' => $item->uploader,
+                    'group' => $item->group,
+                    'lat' => $item->lat,
+                    'long' => $item->long,
+                    'thoroughfare' => $item->thoroughfare,
+                    'subLocality' => $item->subLocality,
+                    'locality' => $item->locality,
+                    'subAdmin' => $item->subAdmin,
+                    'adminArea' => $item->adminArea,
+                    'postalCode' => $item->postalCode,
+                    'createdAt' => $item->created_at->format('d M Y H:i:s'),
+                    'spandukCount' => $item->spandukCount,
+                    'image_url' => $imageUrl
+                ];
+            }));
         } catch (\Exception $e) {
-            // \Log::error('Error in findByCoordinates: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to fetch data',
                 'message' => $e->getMessage()
