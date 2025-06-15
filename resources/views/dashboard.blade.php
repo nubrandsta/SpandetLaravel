@@ -214,44 +214,50 @@
 </div>
 
 <style>
-.detail-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
+  /* detailContainer text fields */
+  #detailContainer [id^="detail-"] {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    word-break: break-word;
+  }
 
-.detail-thumb {
-    width: 100%;
-    height: 100px !important;
-    max-height: 100px !important;
-    object-fit: cover;
-    cursor: pointer;
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-    padding: 0.25rem;
-    background-color: #fff;
-    transition: all 0.2s ease-in-out;
-}
-
-.detail-card .card-body {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100px;
-}
-
-.detail-thumb:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-.detail-image {
+  /* single‐image panel (if you still need it) */
+  #detail-image {
     max-height: 100px;
     width: auto;
     object-fit: contain;
     display: block;
     margin: 0 auto;
-}
+  }
+
+  /* multi‐card thumbnails */
+  .detail-thumb {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    background-color: #fff;
+    transition: transform 0.2s ease-in-out;
+  }
+  .detail-thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  }
+
+  /* card body layout */
+  .detail-card .card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+  }
+
+  /* table/TR hover etc… */
+  tr { cursor: pointer; }
+  tr:hover { background-color: #f8f9fa; }
 </style>
 
 <script>
