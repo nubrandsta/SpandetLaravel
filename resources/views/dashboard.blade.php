@@ -232,6 +232,23 @@
     height: 100px;
     object-fit: contain;
     cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+.detail-thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.detail-image {
+    max-height: 100px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 </style>
 
