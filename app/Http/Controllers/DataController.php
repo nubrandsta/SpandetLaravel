@@ -97,9 +97,9 @@ class DataController extends Controller
             $long = (float) $long;
 
             // Find all data points that match these coordinates
-            // Using a larger tolerance for floating point comparison
-            $data = Data::whereRaw('ABS(`lat` - ?) < 0.0001', [$lat])
-                       ->whereRaw('ABS(`long` - ?) < 0.0001', [$long])
+            // Using a small tolerance for floating point comparison to get exact matches
+            $data = Data::whereRaw('ABS(`lat` - ?) < 0.000001', [$lat])
+                       ->whereRaw('ABS(`long` - ?) < 0.000001', [$long])
                        ->get();
 
             if ($data->isEmpty()) {

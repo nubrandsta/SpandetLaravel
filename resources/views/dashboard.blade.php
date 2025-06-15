@@ -580,7 +580,37 @@ function renderDetails(items) {
                                         throw new Error(`Error: ${response.statusText}`);
                                     }
                                     
-                                    const data = await response.json();
+                                    const responseData = await response.json();
+                                    
+                                    // Check if we have the new data structure with items array
+                                    const hasMultipleItems = responseData.items && Array.isArray(responseData.items);
+                                    
+                                    // If we have multiple items, use the first one for the detail view
+                                    // and call renderDetails for all items if we have more than one
+                                    const data = hasMultipleItems ? responseData.items[0] : responseData;
+                                    
+                                    // If we have multiple items, create a container for them
+                                    if (hasMultipleItems && responseData.items.length > 1) {
+                                        console.log(`Found ${responseData.count} items at these coordinates`);
+                                        
+                                        // Create a container for the detail cards if it doesn't exist
+                                        if (!document.getElementById('detailList')) {
+                                            const detailListContainer = document.createElement('div');
+                                            detailListContainer.className = 'container mt-4';
+                                            detailListContainer.innerHTML = `
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <h5>Multiple entries found (${responseData.count}):</h5>
+                                                    </div>
+                                                </div>
+                                                <div id="detailList" class="row g-3"></div>
+                                            `;
+                                            document.querySelector('#map').parentNode.after(detailListContainer);
+                                            
+                                            // Call renderDetails with all items
+                                            renderDetails(responseData.items);
+                                        }
+                                    }
                                     
                                     // Update detail container with fetched data
                                     detailContainer.innerHTML = `
