@@ -29,7 +29,7 @@
 
 <!-- Detail Container with Image Panel Inside -->
 <div class="mb-4">
-    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
+    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;">
                         <div class="row small g-2">
                             <div class="col-9">
                                 <div class="row">
