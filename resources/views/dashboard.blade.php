@@ -29,7 +29,7 @@
 
 <!-- Detail Container with Image Panel Inside -->
 <div class="mb-4">
-    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;"
+    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm" style="display: none;">
                         <div class="row small g-2">
                             <div class="col-9">
                                 <div class="row">
@@ -214,7 +214,66 @@
 </div>
 
 <style>
-    #detailContainer [id^="detail-"] {
+.detail-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-card .card-body {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-thumb {
+    width: auto;
+    height: 100px;
+    object-fit: contain;
+    cursor: pointer;
+}
+</style>
+
+<script>
+function renderDetails(items) {
+    const list = document.getElementById('detailList');
+    list.innerHTML = '';
+
+    items.forEach(data => {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-md-6 col-lg-4';
+        
+        col.innerHTML = `
+            <div class="card detail-card shadow-sm">
+                <div class="card-body">
+                    <div>
+                        <h6 class="card-title mb-1">${data.uploader || '–'}</h6>
+                        <p class="card-text small mb-2">
+                            <strong>Group:</strong> ${data.group || '–'}<br>
+                            <strong>Spanduk:</strong> ${data.spandukCount || '–'}<br>
+                            <strong>Time:</strong> ${data.createdAt || '–'}
+                        </p>
+                        <p class="card-text small mb-0">
+                            <strong>Coords:</strong> ${data.lat}, ${data.long}
+                        </p>
+                    </div>
+                    <img 
+                        src="${data.image_url || ''}"
+                        class="detail-thumb img-fluid object-fit-contain"
+                        alt="thumbnail"
+                        onclick="openImageModal(this.src)"
+                    />
+                </div>
+            </div>
+        `;
+
+        list.appendChild(col);
+    });
+}
+</script>
+
+    <div id="detailContainer [id^="detail-"] {
         font-size: 0.875rem;
         line-height: 1.3;
         word-break: break-word;
