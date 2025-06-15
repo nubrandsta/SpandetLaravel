@@ -228,9 +228,9 @@
 }
 
 .detail-thumb {
-    width: auto;
+    width: 100%;
     height: 100px;
-    object-fit: contain;
+    object-fit: cover;
     cursor: pointer;
     border: 1px solid #dee2e6;
     border-radius: 0.25rem;
