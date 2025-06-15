@@ -27,38 +27,18 @@
                 </div>
             </div>
 
-<!-- Detail Container with Image Panel Inside -->
+<!-- Detail Container (Scroll View) -->
 <div class="mb-4">
-    <div id="detailContainer" class="bg-white p-3 rounded shadow-sm h-100" style="display: none;">
-                        <div class="row small g-2">
-                            <div class="col-9">
-                                <div class="row">
-                                    <div class="col-6 col-md-3"><span class="text-muted">Uploader:</span> <span id="detail-uploader">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Kelompok:</span> <span id="detail-group">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Jml Spanduk:</span> <span id="detail-spandukCount">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Waktu:</span> <span id="detail-createdAt">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Lat:</span> <span id="detail-lat">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Long:</span> <span id="detail-long">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Area 1:</span> <span id="detail-thoroughfare">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Area 2:</span> <span id="detail-subLocality">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Area 3:</span> <span id="detail-locality">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Area 4:</span> <span id="detail-subAdmin">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Area 5:</span> <span id="detail-adminArea">-</span></div>
-                                    <div class="col-6 col-md-3"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="bg-white p-3 rounded shadow-sm text-center h-100">
-                                    <img id="detail-image" 
-                                         src="" 
-                                         class="img-fluid cursor-pointer object-fit-contain"
-                                         style="cursor: pointer;" 
-                                         onclick="openImageModal(this.src)" />
-                                </div>
-                            </div>
-                        </div>
-        </div>
+  <div
+    id="detailContainer"
+    class="bg-white p-3 rounded shadow-sm"
+    style="display: none; max-height: 300px; overflow-y: auto;"
+  >
+    <h5 class="mb-3">Detail Items</h5>
+    <div id="detailList" class="list-group">
+      {{-- JS will inject <div class="list-group-item">…</div> here --}}
     </div>
+  </div>
 </div>
 
 <!-- Data Table Section -->
@@ -214,26 +194,27 @@
 </div>
 
 <style>
-  /* detailContainer text fields */
-  #detailContainer [id^="detail-"] {
-    font-size: 0.875rem;
-    line-height: 1.3;
-    word-break: break-word;
+  #detailContainer h5 {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    z-index: 1;
   }
 
-  /* single‐image panel (if you still need it) */
-  #detail-image {
-    max-height: 100px;
-    width: auto;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
+  #detailContainer .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
   }
 
-  /* multi‐card thumbnails */
   .detail-thumb {
-    width: 100%;
-    height: 100px;
+    flex-shrink: 0;
+    width: auto;
+    height: 80px;
     object-fit: contain;
     cursor: pointer;
     border: 1px solid #dee2e6;
@@ -242,59 +223,90 @@
     background-color: #fff;
     transition: transform 0.2s ease-in-out;
   }
+
   .detail-thumb:hover {
     transform: scale(1.05);
     box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
   }
 
-  /* card body layout */
-  .detail-card .card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100px;
+  tr {
+    cursor: pointer;
   }
 
-  /* table/TR hover etc… */
-  tr { cursor: pointer; }
-  tr:hover { background-color: #f8f9fa; }
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  /* Mapbox popup styles */
+  .mapboxgl-popup {
+    max-width: 300px;
+  }
+
+  .mapboxgl-popup-content {
+    padding: 15px;
+  }
+
+  .map-popup-content h5 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
+  .map-popup-content p {
+    margin-bottom: 5px;
+  }
+
+  /* Sidebar styles */
+  #sidebar {
+    left: 0;
+    top: 0;
+    padding-top: 60px;
+  }
 </style>
 
 <script>
+function clearDetails() {
+  document.getElementById('detailList').innerHTML = '';
+  document.getElementById('detailContainer').style.display = 'none';
+}
+
+function showDetails() {
+  document.getElementById('detailContainer').style.display = 'block';
+}
+
+function clearDetails() {
+  document.getElementById('detailList').innerHTML = '';
+  document.getElementById('detailContainer').style.display = 'none';
+}
+
+function showDetails() {
+  document.getElementById('detailContainer').style.display = 'block';
+}
+
 function renderDetails(items) {
-    const list = document.getElementById('detailList');
-    list.innerHTML = '';
-
-    items.forEach(data => {
-        const col = document.createElement('div');
-        col.className = 'col-12 col-md-6 col-lg-4';
-        
-        col.innerHTML = `
-            <div class="card detail-card shadow-sm">
-                <div class="card-body">
-                    <div>
-                        <h6 class="card-title mb-1">${data.uploader || '–'}</h6>
-                        <p class="card-text small mb-2">
-                            <strong>Group:</strong> ${data.group || '–'}<br>
-                            <strong>Spanduk:</strong> ${data.spandukCount || '–'}<br>
-                            <strong>Time:</strong> ${data.createdAt || '–'}
-                        </p>
-                        <p class="card-text small mb-0">
-                            <strong>Coords:</strong> ${data.lat}, ${data.long}
-                        </p>
-                    </div>
-                    <img 
-                        src="${data.image_url || ''}"
-                        class="detail-thumb img-fluid object-fit-contain"
-                        alt="thumbnail"
-                        onclick="openImageModal(this.src)"
-                    />
-                </div>
-            </div>
-        `;
-
-        list.appendChild(col);
-    });
+  const list = document.getElementById('detailList');
+  list.innerHTML = '';
+  items.forEach(data => {
+    const el = document.createElement('div');
+    el.className = 'list-group-item';
+    el.innerHTML = `
+      <div>
+        <h6 class="mb-1">${data.uploader || '–'}</h6>
+        <small>
+          <strong>Group:</strong> ${data.group || '–'} •
+          <strong>Spanduk:</strong> ${data.spandukCount || '–'} •
+          <strong>Time:</strong> ${data.createdAt || '–'}
+        </small><br>
+        <small><strong>Coords:</strong> ${data.lat}, ${data.long}</small>
+      </div>
+      <img
+        src="${data.image_url || ''}"
+        class="detail-thumb"
+        onclick="openImageModal(this.src)"
+        alt="thumbnail"
+      />
+    `;
+    list.appendChild(el);
+  });
 }
 </script>
 
@@ -473,6 +485,9 @@ function renderDetails(items) {
                             const dataId = row.querySelector('td[data-id]').dataset.id;
                             if (!dataId) return;
                             
+                            // Clear old items
+                            clearDetails();
+                            
                             // Show the detail container
                             const detailContainer = document.getElementById('detailContainer');
                             detailContainer.style.display = 'flex';
@@ -569,6 +584,9 @@ function renderDetails(items) {
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
                                 try {
+                                    // Clear old items
+                                    clearDetails();
+                                    
                                     // Show loading state
                                     const detailContainer = document.getElementById('detailContainer');
                                     detailContainer.style.display = 'flex';
