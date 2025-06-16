@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Data::query();
+        $query = Data::where('verified', true);
 
         // Handle search
         if ($search = $request->input('search')) {

@@ -42,11 +42,26 @@ class DataController extends Controller
             ], 500);
         }
     }
+
+    public function countUnverified(): JsonResponse
+    {
+        try {
+            $count = Data::where('verified', false)->count();
+
+            return response()->json(['count' => $count]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => 'Failed to count unverified data',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     
     public function index(): JsonResponse
     {
         try {
-            $data = Data::all();
+            $data = Data::where('verified', true)->get();
             return response()->json($data->map(function($item) {
                 // Ensure image_url is properly formatted
                 $imageUrl = $item->imgURI;

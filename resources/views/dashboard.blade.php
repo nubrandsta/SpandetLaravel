@@ -252,6 +252,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        <a href="{{ route('data.verify') }}" class="btn btn-primary ms-2">Verifikasi Data</a>
         padding: 1rem;
         height: 100%;
     }

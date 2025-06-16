@@ -22,7 +22,9 @@ class Data extends Model
         'subAdmin',
         'adminArea',
         'postalCode',
-        'deleted'
+        'deleted',
+        'verified',
+        'verifier'
     ];
 
     public function uploader()

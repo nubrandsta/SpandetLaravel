@@ -50,6 +50,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/data-management/export', [DataManagementController::class, 'export'])->name('data.export');
     Route::delete('/api/data/{id}', [DataManagementController::class, 'destroy']);
     Route::get('/data-management/export-excel', [DataManagementController::class, 'exportExcel'])->name('data.export.excel');
+    
+    // Verification
+    Route::get('/data-verification', [DataManagementController::class, 'verify'])->name('data.verify');
+    Route::post('/verify/{id}', [DataManagementController::class, 'verifyData'])->name('data.verify.submit');
 });
 
 

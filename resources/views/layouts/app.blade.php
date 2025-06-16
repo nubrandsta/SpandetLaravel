@@ -23,6 +23,13 @@
                 <button class="btn btn-link text-white" id="sidebarToggle">
                     <i class="bi bi-list fs-4"></i>
                 </button>
+                <a href="{{ route('data.verify') }}" class="btn btn-link text-white ms-2 position-relative">
+                    Verifikasi Data
+                    <span id="unverifiedBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white">
+                        <span id="unverifiedCount">0</span>
+                        <span class="visually-hidden">unverified entries</span>
+                    </span>
+                </a>
             @endauth
             <h1 class="h4 text-white mx-auto mb-0">Spandet Dashboard</h1>
             @auth
@@ -42,6 +49,7 @@
             <a href="{{ route('user.management') }}" class="dropdown-item {{ request()->routeIs('user.management') ? 'active' : '' }}">Manajemen Akun</a>
             <a href="{{ route('group.management') }}" class="dropdown-item {{ request()->routeIs('group.management') ? 'active' : '' }}">Manajemen Grup</a>
             <a href="{{ route('data.management') }}" class="dropdown-item {{ request()->routeIs('data.management') ? 'active' : '' }}">Manajemen Data</a>
+            <a href="{{ route('data.verify') }}" class="dropdown-item {{ request()->routeIs('data.verify') ? 'active' : '' }}">Verifikasi Data</a>
         </div>
     @endauth
 
@@ -95,6 +103,19 @@
     </script>
     @endauth
 
-    @yield('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/data/unverified-count')
+            .then(response => response.json())
+            .then(data => {
+                if(data.count !== undefined) {
+                    document.getElementById('unverifiedCount').textContent = data.count;
+                }
+            })
+            .catch(error => console.error('Error fetching unverified count:', error));
+    });
+</script>
+
+@yield('scripts')
 </body>
 </html>

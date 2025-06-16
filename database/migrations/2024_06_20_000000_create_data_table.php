@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('adminArea')->nullable();
             $table->string('postalCode')->nullable();
             $table->boolean('deleted')->default(false);
+            $table->boolean('verified')->default(false);
+            $table->string('verifier')->nullable();
             $table->timestamps();
             
             $table->foreign('uploader')->references('username')->on('users');

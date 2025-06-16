@@ -170,6 +170,55 @@ class DataManagementController extends Controller
         }
     }
     
+    public function verify(Request $request)
+    {
+        $query = Data::where('verified', false);
+
+        // Handle search
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('uploader', 'like', "%{$search}%")
+                  ->orWhere('thoroughfare', 'like', "%{$search}%")
+                  ->orWhere('subLocality', 'like', "%{$search}%")
+                  ->orWhere('locality', 'like', "%{$search}%")
+                  ->orWhere('subAdmin', 'like', "%{$search}%")
+                  ->orWhere('adminArea', 'like', "%{$search}%")
+                  ->orWhere('postalCode', 'like', "%{$search}%");
+            });
+        }
+
+        // Handle sorting
+        $sortColumns = ['created_at', 'uploader', 'group', 'spandukCount', 'thoroughfare', 'subLocality', 'locality', 'subAdmin', 'adminArea', 'postalCode'];
+        $sort = $request->input('sort');
+        $direction = $request->input('direction');
+
+        if ($sort && in_array($sort, $sortColumns)) {
+            $query->orderBy($sort, $direction ?? 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $data = $query->paginate(10)->appends($request->query());
+
+        return view('verify', compact('data'));
+    }
+    
+    public function verifyData(Request $request, $id)
+    {
+        try {
+            $data = Data::findOrFail($id);
+            $data->verified = true;
+            $data->verifier = $request->input('verifier');
+            $data->spandukCount = $request->input('spandukCount');
+            $data->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            Log::error('Error verifying data: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal memverifikasi data']);
+        }
+    }
+
     public function exportExcel(Request $request)
     {
         try {

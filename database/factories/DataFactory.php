@@ -27,7 +27,8 @@ class DataFactory extends Factory
             'subAdmin' => $this->faker->state(),
             'adminArea' => $this->faker->state(),
             'postalCode' => $this->faker->postcode(),
-            'deleted' => false
+            'deleted' => false,
+            'verified' => false
         ];
     }
 }
