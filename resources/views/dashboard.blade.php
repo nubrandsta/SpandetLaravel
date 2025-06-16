@@ -49,12 +49,14 @@
                 </div>
             </div>
             <div class="col-3">
-                <div class="bg-white p-3 rounded shadow-sm text-center h-100">
-                    <img id="detail-image" 
-                         src="" 
-                         class="img-fluid cursor-pointer object-fit-contain"
-                         style="cursor: pointer;" 
-                         onclick="openImageModal(this.src)" />
+                <div class="bg-white p-3 rounded shadow-sm text-center">
+                    <img
+                        id="detail-image"
+                        src=""
+                        class="detail-thumb cursor-pointer"
+                        onclick="openImageModal(this.src)"
+                        alt="thumbnail"
+                    />
                 </div>
             </div>
         </div>
