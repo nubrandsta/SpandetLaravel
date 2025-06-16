@@ -97,7 +97,7 @@ class DataController extends Controller
             $long = (float) $long;
 
             // Find all data points that match these coordinates
-            // Using a small tolerance for floating point comparison to get exact matches
+            // Using a small tolerance for floating point comparison
             $data = Data::whereRaw('ABS(`lat` - ?) < 0.000001', [$lat])
                        ->whereRaw('ABS(`long` - ?) < 0.000001', [$long])
                        ->get();
@@ -109,37 +109,30 @@ class DataController extends Controller
                 ], 404);
             }
 
-            // Log the count to verify multiple records are found
-            \Illuminate\Support\Facades\Log::info("Found {$data->count()} records with coordinates near lat: {$lat}, long: {$long}");
+            return response()->json($data->map(function($item) {
+                // Format image URL
+                $imageUrl = $item->imgURI;
+                if (!empty($imageUrl) && !str_starts_with($imageUrl, 'http')) {
+                    $imageUrl = 'https://spandet.my.id/' . ltrim($imageUrl, '/');
+                }
 
-            // Return as an array with count and items to ensure proper JSON serialization
-            return response()->json([
-                'count' => $data->count(),
-                'items' => $data->map(function($item) {
-                    // Format image URL
-                    $imageUrl = $item->imgURI;
-                    if (!empty($imageUrl) && !str_starts_with($imageUrl, 'http')) {
-                        $imageUrl = 'https://spandet.my.id/' . ltrim($imageUrl, '/');
-                    }
-
-                    return [
-                        'id' => $item->id,
-                        'uploader' => $item->uploader,
-                        'group' => $item->group,
-                        'lat' => $item->lat,
-                        'long' => $item->long,
-                        'thoroughfare' => $item->thoroughfare,
-                        'subLocality' => $item->subLocality,
-                        'locality' => $item->locality,
-                        'subAdmin' => $item->subAdmin,
-                        'adminArea' => $item->adminArea,
-                        'postalCode' => $item->postalCode,
-                        'createdAt' => $item->created_at->format('d M Y H:i:s'),
-                        'spandukCount' => $item->spandukCount,
-                        'image_url' => $imageUrl
-                    ];
-                })->values()->all() // Ensure indexed array
-            ]);
+                return [
+                    'id' => $item->id,
+                    'uploader' => $item->uploader,
+                    'group' => $item->group,
+                    'lat' => $item->lat,
+                    'long' => $item->long,
+                    'thoroughfare' => $item->thoroughfare,
+                    'subLocality' => $item->subLocality,
+                    'locality' => $item->locality,
+                    'subAdmin' => $item->subAdmin,
+                    'adminArea' => $item->adminArea,
+                    'postalCode' => $item->postalCode,
+                    'createdAt' => $item->created_at->format('d M Y H:i:s'),
+                    'spandukCount' => $item->spandukCount,
+                    'image_url' => $imageUrl
+                ];
+            }));
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch data',
