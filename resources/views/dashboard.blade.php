@@ -495,42 +495,40 @@ function renderDetails(items) {
                 col.className = 'col-12 mb-3';
                 
                 col.innerHTML = `
-                            <div class="card detail-card shadow-sm">
-                                <div class="card-body p-3">
-                                <div class="row gx-3">
-                                    <!-- Details table on left -->
-                                    <div class="col-9">
-                                    <table class="table table-borderless table-sm mb-0 small">
-                                        <tbody>
-                                        <tr><th>Uploader</th><td>${data.uploader || '–'}</td></tr>
-                                        <tr><th>Group</th><td>${data.group || '–'}</td></tr>
-                                        <tr><th>Spanduk</th><td>${data.spandukCount || '–'}</td></tr>
-                                        <tr><th>Time</th><td>${data.createdAt || '–'}</td></tr>
-                                        <tr><th>Lat</th><td>${data.lat || '–'}</td></tr>
-                                        <tr><th>Long</th><td>${data.long || '–'}</td></tr>
-                                        <tr><th>Area 1</th><td>${data.thoroughfare || '–'}</td></tr>
-                                        <tr><th>Area 2</th><td>${data.subLocality || '–'}</td></tr>
-                                        <tr><th>Area 3</th><td>${data.locality || '–'}</td></tr>
-                                        <tr><th>Area 4</th><td>${data.subAdmin || '–'}</td></tr>
-                                        <tr><th>Area 5</th><td>${data.adminArea || '–'}</td></tr>
-                                        <tr><th>Postal Code</th><td>${data.postalCode || '–'}</td></tr>
-                                        </tbody>
-                                    </table>
-                                    </div>
-
-                                    <!-- Thumbnail on right -->
-                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                    <img
-                                        src="${data.image_url || ''}"
-                                        class="img-fluid detail-thumb"
-                                        alt="thumbnail"
-                                        onclick="openImageModal(this.src)"
-                                    />
-                                    </div>
-                                </div>
+                    <div class="card detail-card shadow-sm">
+                        <div class="card-body p-3">
+                        <div class="row gx-3">
+                            <!-- Left: data grid -->
+                            <div class="col-12 col-md-9">
+                                <div class="row g-2">
+                                    <div class="col-6 col-md-4"><strong>Uploader:</strong> ${data.uploader || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Group:</strong> ${data.group || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Spanduk:</strong> ${data.spandukCount || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Time:</strong> ${data.createdAt || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Lat:</strong> ${data.lat || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Long:</strong> ${data.long || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Area 1:</strong> ${data.thoroughfare || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Area 2:</strong> ${data.subLocality || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Area 3:</strong> ${data.locality || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Area 4:</strong> ${data.subAdmin || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Area 5:</strong> ${data.adminArea || '–'}</div>
+                                    <div class="col-6 col-md-4"><strong>Postal Code:</strong> ${data.postalCode || '–'}</div>
                                 </div>
                             </div>
-                            `;
+
+                            <!-- Right: thumbnail -->
+                            <div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
+                            <img
+                                src="${data.image_url || ''}"
+                                class="img-fluid detail-thumb"
+                                alt="thumbnail"
+                                onclick="openImageModal(this.src)"
+                            />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    `;
 
                 list.appendChild(col);
             });
