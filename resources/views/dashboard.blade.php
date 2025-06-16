@@ -639,7 +639,6 @@ function renderDetails(items) {
                             }
                         });
                     });
-                    });
                     
                     // Fetch all data points for the map
                     const response = await fetch('/api/data');
