@@ -5,9 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\Data;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class DataController extends Controller
 {
+    public function getVerifiedAggregated(): JsonResponse
+    {
+        try {
+            $aggregatedData = Data::where('verified', true)
+                ->select(
+                    'lat',
+                    'long',
+                    DB::raw('SUM(spandukCount) as spandukCount'),
+                    DB::raw('MAX(id) as id'), // Get the latest ID
+                    DB::raw('MAX(uploader) as uploader'), // Get the latest uploader
+                    DB::raw('MAX(created_at) as createdAt') // Get the latest timestamp
+                )
+                ->groupBy('lat', 'long')
+                ->get();
+
+            return response()->json($aggregatedData->map(function($item) {
+                // Since we are aggregating, we can't show a single image.
+                // You might want to link to a page showing all images for these coordinates.
+                return [
+                    'id' => $item->id,
+                    'uploader' => $item->uploader,
+                    'lat' => $item->lat,
+                    'long' => $item->long,
+                    'createdAt' => $item->createdAt,
+                    'spandukCount' => $item->spandukCount,
+                    'image_url' => null // No single image for aggregated data
+                ];
+            }));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch aggregated data',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function show($id): JsonResponse
     {
         try {

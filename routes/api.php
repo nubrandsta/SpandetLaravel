@@ -27,6 +27,7 @@ Route::middleware(['api', \Illuminate\Session\Middleware\StartSession::class])->
 });
 
 Route::get('/data', [DataController::class, 'index']);
+Route::get('/data/verified-aggregated', [DataController::class, 'getVerifiedAggregated']);
 Route::get('/data/coordinates', [DataController::class, 'findByCoordinates']);
 Route::get('/data/unverified-count', [DataController::class, 'countUnverified']);
 Route::get('/data/{id}', [DataController::class, 'show']);

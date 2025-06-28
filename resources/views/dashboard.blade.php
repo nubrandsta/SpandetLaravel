@@ -252,7 +252,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        <a href="{{ route('data.verify') }}" class="btn btn-primary ms-2">Verifikasi Data</a>
+        /* <a href="{{ route('data.verify') }}" class="btn btn-primary ms-2">Verifikasi Data</a> */
         padding: 1rem;
         height: 100%;
     }
@@ -656,7 +656,7 @@ function renderDetails(items) {
                     });
                     
                     // Fetch all data points for the map
-                    const response = await fetch('/api/data');
+                    const response = await fetch('/api/data/verified-aggregated');
                     if (!response.ok) {
                         throw new Error(`Error: ${response.statusText}`);
                     }
