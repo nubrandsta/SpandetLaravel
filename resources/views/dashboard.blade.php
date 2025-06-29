@@ -394,6 +394,21 @@ function renderDetails(items) {
             left: 0;
         }
     }
+    .custom-marker {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .custom-marker.selected {
+    background-color: yellow;
+    transform: scale(1.2);
+    }
 </style>
 
 <!-- Image Modal -->
@@ -662,6 +677,8 @@ function renderDetails(items) {
                     }
                     
                     const allData = await response.json();
+
+                    let selectedMarkerEl = null;
                     
                     // Add markers for each data point
                     allData.forEach(point => {
@@ -681,9 +698,21 @@ function renderDetails(items) {
                             // Create popup
                             const popup = new mapboxgl.Popup({ offset: 25 })
                                 .setHTML(popupContent);
+
+                            const markerEl = document.createElement('div');
+                            markerEl.className = 'custom-marker'; // default style
+                            markerEl.style.width = '20px';
+                            markerEl.style.height = '20px';
+                            markerEl.style.backgroundColor = 'blue';
+                            markerEl.style.borderRadius = '50%';
+                            markerEl.style.cursor = 'pointer';
+                            markerEl.style.border = '2px solid white';
+                            markerEl.style.boxShadow = '0 0 5px black';
+                            markerEl.title = "Custom Marker";
+
                             
                             // Create marker
-                            const marker = new mapboxgl.Marker()
+                            const marker = new mapboxgl.Marker(markerEl)
                                 .setLngLat([point.long, point.lat])
                                 .setPopup(popup)
                                 .addTo(map);
@@ -693,6 +722,12 @@ function renderDetails(items) {
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
                                 try {
+                                     // Deselect previous marker
+                                    if (selectedMarkerEl && selectedMarkerEl !== markerEl) {
+                                        selectedMarkerEl.style.backgroundColor = 'blue';
+                                        selectedMarkerEl.style.transform = 'scale(1)';
+                                    }
+
                                     // Show loading state in the list container
                                     showMultipleDetails();
                                     const detailList = document.getElementById('detailList');
@@ -708,6 +743,13 @@ function renderDetails(items) {
                                     
                                     // Use the renderDetails function to display the data
                                     renderDetails(data);
+
+                                    // Apply selection with visual stability
+                                    requestAnimationFrame(() => {
+                                        markerEl.style.backgroundColor = 'red';
+                                        markerEl.style.transform = 'scale(1.2)';
+                                    });
+                                    selectedMarkerEl = markerEl;
                                     
                                     // Center map
                                     if (point.lat && point.long) {
