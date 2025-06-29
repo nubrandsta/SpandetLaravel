@@ -19,7 +19,10 @@ class DataController extends Controller
                     DB::raw('SUM(spandukCount) as spandukCount'),
                     DB::raw('MAX(id) as id'), // Get the latest ID
                     DB::raw('MAX(uploader) as uploader'), // Get the latest uploader
-                    DB::raw('MAX(created_at) as createdAt') // Get the latest timestamp
+                    DB::raw('MAX(created_at) as createdAt'), // Get the latest timestamp
+                    DB::raw(value: 'MAX(thoroughfare) as thoroughfare'),
+                    DB::raw(value: 'MAX(subLocality) as subLocality'),
+                    
                 )
                 ->groupBy('lat', 'long')
                 ->get();
@@ -32,7 +35,9 @@ class DataController extends Controller
                     'uploader' => $item->uploader,
                     'lat' => $item->lat,
                     'long' => $item->long,
+                    'thoroughfare' => $item->thoroughfare,
                     'createdAt' => $item->createdAt,
+                    
                     'spandukCount' => $item->spandukCount,
                     'image_url' => null // No single image for aggregated data
                 ];

@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/data-management', [DataManagementController::class, 'index'])->name('data.management');
     Route::get('/data-management/export', [DataManagementController::class, 'export'])->name('data.export');
     Route::delete('/api/data/{id}', [DataManagementController::class, 'destroy']);
+    Route::put('/data/{id}/spanduk-count', [DataManagementController::class, 'updateSpandukCount'])->name('data.update.spandukCount');
     Route::get('/data-management/export-excel', [DataManagementController::class, 'exportExcel'])->name('data.export.excel');
     
     // Verification

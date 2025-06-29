@@ -35,7 +35,12 @@
                                 <div class="col-6"><span class="text-muted">Kode Pos:</span> <span id="detail-postalCode">-</span></div>
                             </div>
                             <div class="mt-3">
+                                <div class="mb-3">
+                                    <label for="spandukCountInput" class="form-label">Jumlah Spanduk</label>
+                                    <input type="number" class="form-control" id="spandukCountInput" value="0">
+                                </div>
                                 <button id="deleteDataBtn" class="btn btn-danger btn-sm">Hapus Data</button>
+                                <button id="updateSpandukCountBtn" class="btn btn-primary btn-sm ms-2">Update Jumlah Spanduk</button>
                             </div>
                         </div>
                     </div>
@@ -264,6 +269,42 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize Bootstrap 5 modals
         const deleteDataModal = new bootstrap.Modal(document.getElementById('deleteDataModal'));
+
+        // Update Spanduk Count button functionality
+        document.getElementById('updateSpandukCountBtn').addEventListener('click', async function() {
+            const spandukCount = document.getElementById('spandukCountInput').value;
+            if (!selectedDataId) return;
+
+            if (parseInt(spandukCount) === originalSpandukCount) {
+                alert('Nilai jumlah spanduk sama dengan nilai sebelumnya.');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('spandukCount', spandukCount);
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+                const response = await fetch(`/data/${selectedDataId}/spanduk-count`, {
+                    method: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ spandukCount: spandukCount })
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Gagal memperbarui jumlah spanduk');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memperbarui jumlah spanduk');
+            }
+        });
         
         // Fix for aria-hidden warning
         const modals = document.querySelectorAll('.modal');
@@ -277,6 +318,7 @@
         });
         
         let selectedDataId = null;
+        let originalSpandukCount = null;
         
         document.querySelectorAll('tbody tr').forEach(row => {
             row.addEventListener('click', async () => {
@@ -297,6 +339,8 @@
                     }
                     
                     const data = await response.json();
+                    document.getElementById('spandukCountInput').value = data.spandukCount;
+                    originalSpandukCount = data.spandukCount;
                     
                     // Update detail fields
                     document.getElementById('detail-uploader').textContent = data.uploader || '-';

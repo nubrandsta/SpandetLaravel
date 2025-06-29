@@ -687,7 +687,7 @@ function renderDetails(items) {
                             const popupContent = `
                                 <div class="map-popup-content">
                                     <h5>${point.uploader || 'Unknown'}</h5>
-                                    <p><strong>Jumlah Spanduk:</strong> ${point.spandukCount || '0'}</p>
+                                    <p><strong>Total Spanduk:</strong> ${point.spandukCount || '0'}</p>
                                     <p><strong>Area:</strong> ${point.thoroughfare || '-'}</p>
                                 
                                     <p><strong>Waktu:</strong> ${point.createdAt || '-'}</p>

@@ -218,6 +218,20 @@ class DataManagementController extends Controller
             return response()->json(['success' => false, 'message' => 'Gagal memverifikasi data']);
         }
     }
+    
+    public function updateSpandukCount(Request $request, $id)
+    {
+        try {
+            $data = Data::findOrFail($id);
+            $data->spandukCount = $request->input('spandukCount');
+            $data->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            Log::error('Error updating spandukCount: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal memperbarui jumlah spanduk']);
+        }
+    }
 
     public function exportExcel(Request $request)
     {

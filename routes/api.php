@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DataManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,4 @@ Route::get('/data/verified-aggregated', [DataController::class, 'getVerifiedAggr
 Route::get('/data/coordinates', [DataController::class, 'findByCoordinates']);
 Route::get('/data/unverified-count', [DataController::class, 'countUnverified']);
 Route::get('/data/{id}', [DataController::class, 'show']);
+Route::put('/data/spanduk-count/{id}', [DataManagementController::class, 'updateSpandukCount']);
