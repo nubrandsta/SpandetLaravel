@@ -22,6 +22,7 @@ class DataController extends Controller
                     DB::raw('MAX(created_at) as createdAt'), // Get the latest timestamp
                     DB::raw(value: 'MAX(thoroughfare) as thoroughfare'),
                     DB::raw(value: 'MAX(subLocality) as subLocality'),
+                    DB::raw(value: 'MAX(postalCode) as postalCode')
                     
                 )
                 ->groupBy('lat', 'long')
@@ -37,7 +38,7 @@ class DataController extends Controller
                     'long' => $item->long,
                     'thoroughfare' => $item->thoroughfare,
                     'createdAt' => $item->createdAt,
-                    
+                    'postalCode' => $item->postalCode,
                     'spandukCount' => $item->spandukCount,
                     'image_url' => null // No single image for aggregated data
                 ];
