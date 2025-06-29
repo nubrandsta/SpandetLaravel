@@ -689,7 +689,7 @@ function renderDetails(items) {
                                 .addTo(map);
                             
                             markers.push(marker);
-                            
+
                             // Add click event to marker that shows details and scrolls to map
                             marker.getElement().addEventListener('click', async () => {
                                 try {

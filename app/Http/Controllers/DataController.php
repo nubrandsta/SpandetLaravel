@@ -151,6 +151,7 @@ class DataController extends Controller
             // Using a small tolerance for floating point comparison
             $data = Data::whereRaw('ABS(`lat` - ?) < 0.000001', [$lat])
                        ->whereRaw('ABS(`long` - ?) < 0.000001', [$long])
+                       ->whereRaw(sql: 'verified = 1')
                        ->get();
 
             if ($data->isEmpty()) {
